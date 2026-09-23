@@ -1,0 +1,3717 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Cute Arcade 🌸 - Block Blast, Tic Tac Toe, Baking, Dress Up & Purble Place</title>
+  <meta name="description" content="Koleksi game imut dan estetis: Block Blast, Tic Tac Toe Biru Muda, Baking Kue, Dress to Impress Pink, dan Purble Place Lilac dalam 1 file HTML!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-main: 'Fredoka', 'Outfit', sans-serif;
+      --font-title: 'Outfit', sans-serif;
+      /* Pink Theme Default */
+      --theme-bg: #140713;
+      --theme-glow: rgba(255, 77, 148, 0.3);
+      --theme-accent: #ff4d94;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0f0510;
+      font-family: var(--font-main);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Ambient background glows */
+    .ambient-glow {
+      position: fixed;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--theme-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transition: background 0.5s ease;
+    }
+
+    /* Global Particle Canvas */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* App Container */
+    .app-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 10px 14px 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation & Game Switcher */
+    header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .brand-title {
+      font-family: var(--font-title);
+      font-weight: 900;
+      font-size: 1.5rem;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #fff 15%, #ff80bf 60%, #ff2e8c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      filter: drop-shadow(0 2px 8px rgba(255, 46, 140, 0.4));
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-more-games {
+      background: linear-gradient(135deg, #ff2e8c, #9d4edd);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(157, 78, 221, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-more-games:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(255, 46, 140, 0.6);
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffd6ec;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* Game Navigation Pill Carousel */
+    .game-tabs {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .game-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-pill {
+      flex: 0 0 auto;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e0d0e8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+    }
+
+    .tab-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .tab-pill.active {
+      transform: scale(1.03);
+      color: #fff;
+    }
+
+    .tab-pill.tab-blockblast.active {
+      background: linear-gradient(135deg, #ff2e8c, #ff75b9);
+      border-color: #ff99d6;
+      box-shadow: 0 3px 12px rgba(255, 46, 140, 0.5);
+    }
+
+    .tab-pill.tab-tictactoe.active {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border-color: #7dd3fc;
+      box-shadow: 0 3px 12px rgba(56, 189, 248, 0.5);
+    }
+
+    .tab-pill.tab-baking.active {
+      background: linear-gradient(135deg, #ea580c, #fb923c);
+      border-color: #fed7aa;
+      box-shadow: 0 3px 12px rgba(251, 146, 60, 0.5);
+    }
+
+    .tab-pill.tab-dressup.active {
+      background: linear-gradient(135deg, #db2777, #f472b6);
+      border-color: #fbcfe8;
+      box-shadow: 0 3px 12px rgba(244, 114, 182, 0.5);
+    }
+
+    .tab-pill.tab-purble.active {
+      background: linear-gradient(135deg, #7e22ce, #c084fc);
+      border-color: #e9d5ff;
+      box-shadow: 0 3px 12px rgba(192, 132, 252, 0.5);
+    }
+
+    /* Game Screens Container */
+    .game-view {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInView 0.3s ease forwards;
+    }
+
+    .game-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================================================
+       GAME 1: BLOCK BLAST (PINK) STYLES
+       ========================================================================= */
+    .bb-scoreboard {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .score-card {
+      background: rgba(255, 105, 180, 0.08);
+      border: 1px solid rgba(255, 150, 205, 0.25);
+      border-radius: 18px;
+      padding: 10px 14px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .score-card.scoring-pulse {
+      animation: scorePulse 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      box-shadow: 0 0 28px rgba(255, 77, 148, 0.9), inset 0 0 12px rgba(255, 255, 255, 0.6);
+      border-color: #ff99d6;
+    }
+
+    .new-best-badge {
+      position: absolute;
+      top: -8px;
+      right: -6px;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #381200;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(255, 215, 0, 0.8);
+      animation: bounce 1.2s infinite;
+      z-index: 5;
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ffb3d9;
+      margin-bottom: 2px;
+    }
+
+    .score-value {
+      font-family: var(--font-title);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      text-shadow: 0 2px 10px rgba(255, 77, 148, 0.5);
+    }
+
+    .combo-pill {
+      min-height: 28px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .combo-pill.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .combo-badge {
+      background: linear-gradient(90deg, #ff2e8c, #ff70b8);
+      padding: 4px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.5);
+      animation: pulseGlow 1.2s infinite alternate;
+    }
+
+    .board-wrapper {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 400px;
+      background: rgba(36, 12, 31, 0.85);
+      border: 2px solid rgba(255, 150, 205, 0.3);
+      border-radius: 22px;
+      padding: 8px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45), 0 0 25px rgba(255, 77, 148, 0.15);
+      backdrop-filter: blur(14px);
+      position: relative;
+    }
+
+    .board-grid {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: 5px;
+    }
+
+    .cell {
+      background: rgba(62, 21, 52, 0.55);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 120, 185, 0.18);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cell.preview-valid {
+      background: rgba(255, 120, 195, 0.45) !important;
+      border-color: #ff99d6 !important;
+      box-shadow: 0 0 12px rgba(255, 105, 180, 0.7), inset 0 0 6px rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .cell.clearing {
+      animation: cellVanish 0.32s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    }
+
+    .block {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      position: relative;
+      box-shadow: inset 0 3px 2px rgba(255, 255, 255, 0.55), inset 0 -3px 3px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.25);
+    }
+    .block::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      width: 35%;
+      height: 25%;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .color-1 { background: linear-gradient(135deg, #ff7ebb, #ff2a85); }
+    .color-2 { background: linear-gradient(135deg, #ff94c2, #f43f8d); }
+    .color-3 { background: linear-gradient(135deg, #ff6097, #d91b6e); }
+    .color-4 { background: linear-gradient(135deg, #ffa8cf, #ff5299); }
+    .color-5 { background: linear-gradient(135deg, #f770a3, #b81467); }
+    .color-6 { background: linear-gradient(135deg, #ffb8d9, #fa4d92); }
+    .color-7 { background: linear-gradient(135deg, #ff6ba5, #a3005b); }
+
+    .dock-container {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 14px;
+      background: rgba(255, 105, 180, 0.08);
+      border: 1px solid rgba(255, 150, 205, 0.25);
+      border-radius: 22px;
+      padding: 10px 6px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      min-height: 120px;
+      backdrop-filter: blur(12px);
+    }
+
+    .piece-slot {
+      flex: 1;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .piece-wrapper {
+      display: grid;
+      gap: 3px;
+      cursor: grab;
+      padding: 6px;
+      border-radius: 12px;
+      transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+      touch-action: none;
+    }
+    .piece-wrapper:active { cursor: grabbing; }
+
+    .piece-wrapper.disabled {
+      opacity: 0.3;
+      filter: grayscale(0.5);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .piece-wrapper.selected {
+      outline: 2px dashed #ff99d6;
+      background: rgba(255, 105, 180, 0.2);
+      box-shadow: 0 0 16px rgba(255, 77, 148, 0.5);
+      transform: scale(1.08);
+    }
+
+    .piece-wrapper .piece-cell {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+    }
+
+    .piece-wrapper.dragging {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1.15);
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 15px rgba(255, 77, 148, 0.7));
+      opacity: 0.95;
+    }
+
+    .floating-score {
+      position: fixed;
+      font-family: var(--font-title);
+      font-weight: 900;
+      pointer-events: none;
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      animation: floatScore 0.9s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+      filter: drop-shadow(0 4px 14px rgba(255, 46, 140, 0.8));
+    }
+    .floating-score .score-title {
+      font-size: 0.82rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(90deg, #ff2e8c, #ff70b8);
+      padding: 3px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      margin-bottom: 3px;
+      box-shadow: 0 0 12px rgba(255, 46, 140, 0.7);
+    }
+    .floating-score .score-num {
+      font-size: 1.85rem;
+      font-weight: 900;
+      background: linear-gradient(180deg, #ffffff 15%, #ffe6f4 50%, #ff4da6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 18px rgba(255, 77, 148, 0.9);
+    }
+
+    /* =========================================================================
+       GAME 2: TIC TAC TOE (LIGHT BLUE / BIRU MUDA) STYLES
+       ========================================================================= */
+    .ttt-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .ttt-header {
+      width: 100%;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 20px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.2);
+    }
+
+    .ttt-mode-select {
+      display: flex;
+      background: rgba(2, 132, 199, 0.25);
+      border-radius: 25px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .ttt-mode-btn {
+      background: transparent;
+      border: none;
+      color: #bae6fd;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .ttt-mode-btn.active {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+    }
+
+    .ttt-scoreboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      width: 100%;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .ttt-score-box {
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 6px;
+    }
+
+    .ttt-score-label {
+      font-size: 0.7rem;
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+
+    .ttt-score-val {
+      font-family: var(--font-title);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .ttt-status-pill {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #e0f2fe;
+      background: rgba(56, 189, 248, 0.25);
+      border: 1px solid #38bdf8;
+      padding: 6px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+    }
+
+    .ttt-board {
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 1 / 1;
+      background: rgba(8, 47, 73, 0.8);
+      border: 2px solid rgba(56, 189, 248, 0.45);
+      border-radius: 24px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.25);
+    }
+
+    .ttt-cell {
+      background: rgba(14, 165, 233, 0.18);
+      border: 2px solid rgba(56, 189, 248, 0.3);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-title);
+      font-size: 3.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    .ttt-cell:hover:empty {
+      background: rgba(56, 189, 248, 0.35);
+      transform: scale(0.96);
+    }
+
+    .ttt-cell.mark-x {
+      color: #38bdf8;
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+      animation: popMark 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .ttt-cell.mark-o {
+      color: #f472b6;
+      text-shadow: 0 0 20px rgba(244, 114, 182, 0.8);
+      animation: popMark 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .ttt-cell.win-highlight {
+      background: rgba(56, 189, 248, 0.55) !important;
+      border-color: #fff !important;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.9) !important;
+      animation: pulseWin 0.7s infinite alternate;
+    }
+
+    @keyframes popMark {
+      0% { transform: scale(0.3); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pulseWin {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+
+    /* =========================================================================
+       GAME 3: SWEET CAKE BAKERY (BAKING GAME) STYLES
+       ========================================================================= */
+    .bake-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .bake-display {
+      width: 100%;
+      height: 250px;
+      background: radial-gradient(circle, rgba(251, 146, 60, 0.15) 0%, rgba(30, 15, 10, 0.6) 80%);
+      border: 2px solid rgba(251, 146, 60, 0.35);
+      border-radius: 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .cake-plate {
+      width: 180px;
+      height: 24px;
+      background: linear-gradient(180deg, #f8fafc, #cbd5e1);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 30px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .cake-assembly {
+      position: absolute;
+      bottom: 45px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .cake-tier {
+      border-radius: 14px 14px 8px 8px;
+      position: relative;
+      box-shadow: inset 0 3px 5px rgba(255, 255, 255, 0.4), inset 0 -4px 6px rgba(0, 0, 0, 0.3), 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+    }
+
+    .cake-tier.tier-bottom { width: 140px; height: 50px; }
+    .cake-tier.tier-middle { width: 105px; height: 42px; margin-bottom: -5px; }
+    .cake-tier.tier-top { width: 75px; height: 35px; margin-bottom: -5px; }
+
+    /* Frosting drips */
+    .frosting-drip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 16px;
+      border-radius: 14px 14px 10px 10px;
+      opacity: 0.95;
+    }
+
+    /* Cake Toppings container */
+    .cake-toppings {
+      position: absolute;
+      top: -30px;
+      display: flex;
+      gap: 6px;
+      font-size: 1.6rem;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+      animation: floatHeart 2s infinite alternate;
+    }
+
+    .bake-oven-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(234, 88, 12, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .bake-oven-overlay.baking { opacity: 1; pointer-events: auto; }
+
+    .bake-controls {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bake-control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bake-control-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fed7aa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .bake-options {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .bake-options::-webkit-scrollbar { display: none; }
+
+    .bake-opt-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 6px 12px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .bake-opt-btn:hover { background: rgba(255, 255, 255, 0.2); }
+    .bake-opt-btn.active {
+      background: linear-gradient(135deg, #ea580c, #fb923c);
+      border-color: #ffedd5;
+      box-shadow: 0 2px 10px rgba(251, 146, 60, 0.5);
+    }
+
+    /* =========================================================================
+       GAME 4: DRESS TO IMPRESS (GLAM RUNWAY & CHIBI SYSTEM) STYLES
+       ========================================================================= */
+    :root {
+      --dti-skin: #fed7aa;
+      --dti-skin-shadow: #e0a96d;
+    }
+
+    .dti-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Character Profile Switcher (Dewasa/Anak & Cewe/Cowo) */
+    .dti-profile-bar {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 105, 180, 0.3);
+      border-radius: 18px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 16px rgba(255, 46, 140, 0.15);
+    }
+
+    .dti-profile-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dti-profile-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #ffd1eb;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 2px;
+    }
+
+    .dti-toggle-group {
+      display: flex;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 2px;
+      border-radius: 12px;
+      gap: 2px;
+    }
+
+    .dti-pill-btn {
+      background: transparent;
+      border: none;
+      color: #e2d4e8;
+      font-family: var(--font-main);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .dti-pill-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dti-pill-btn.active {
+      background: linear-gradient(135deg, #ff2e8c, #ff70a6);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(255, 46, 140, 0.4);
+    }
+
+    .dti-random-btn {
+      background: linear-gradient(135deg, #9d4edd, #ff2e8c);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-family: var(--font-title);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 3px 10px rgba(157, 78, 221, 0.35);
+      flex-shrink: 0;
+    }
+    .dti-random-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.5);
+    }
+
+    /* Runway Stage */
+    .dti-stage {
+      width: 100%;
+      height: 310px;
+      background: radial-gradient(circle at 50% 25%, rgba(255, 105, 180, 0.35) 0%, rgba(35, 8, 30, 0.85) 75%, #120310 100%);
+      border: 2px solid rgba(255, 105, 180, 0.45);
+      border-radius: 24px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 10px 32px rgba(255, 46, 140, 0.3), inset 0 0 40px rgba(255, 105, 180, 0.15);
+    }
+
+    .dti-spotlight {
+      position: absolute;
+      top: -40px;
+      width: 220px;
+      height: 350px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 105, 180, 0.15) 60%, transparent 100%);
+      transform: perspective(300px) rotateX(25deg);
+      pointer-events: none;
+      animation: spotlightPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes spotlightPulse {
+      0% { opacity: 0.7; transform: perspective(300px) rotateX(25deg) scaleX(0.95); }
+      100% { opacity: 1; transform: perspective(300px) rotateX(25deg) scaleX(1.05); }
+    }
+
+    .dti-runway-floor {
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      right: 10%;
+      height: 38px;
+      background: linear-gradient(180deg, rgba(255, 105, 180, 0.25), rgba(255, 46, 140, 0.5));
+      border-top: 2px solid rgba(255, 255, 255, 0.6);
+      border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+      box-shadow: 0 -4px 20px rgba(255, 46, 140, 0.4);
+      pointer-events: none;
+    }
+
+    .dti-camera-flash {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+    .dti-camera-flash.flash-active {
+      animation: flashAnimation 0.4s ease-out;
+    }
+    @keyframes flashAnimation {
+      0% { opacity: 0.95; }
+      40% { opacity: 0.7; }
+      100% { opacity: 0; }
+    }
+
+    /* Avatar Canvas & Rigging */
+    .dti-avatar-canvas {
+      position: relative;
+      width: 160px;
+      height: 270px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 22px;
+      z-index: 10;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Strut Runway Animation */
+    .dti-avatar-canvas.runway-strut {
+      animation: runwayStrut 2.5s ease-in-out;
+    }
+    @keyframes runwayStrut {
+      0% { transform: scale(0.9) translateY(20px); filter: brightness(0.9); }
+      30% { transform: scale(1.08) translateY(-8px) rotate(-2deg); filter: brightness(1.15); }
+      50% { transform: scale(1.08) translateY(-4px) rotate(2deg); filter: brightness(1.2); }
+      70% { transform: scale(1.15) translateY(-14px) rotate(0deg); filter: brightness(1.25); }
+      85% { transform: scale(1.1) translateY(-6px) rotate(-1deg); }
+      100% { transform: scale(1) translateY(0); filter: brightness(1); }
+    }
+
+    /* Head */
+    .avatar-head {
+      position: relative;
+      background: var(--dti-skin);
+      box-shadow: inset 0 -3px 6px var(--dti-skin-shadow), 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+      transition: all 0.25s ease;
+    }
+
+    /* Dewasa vs Anak Proportions */
+    .avatar-dewasa-cewe .avatar-head {
+      width: 48px;
+      height: 52px;
+      border-radius: 24px 24px 22px 22px;
+    }
+    .avatar-dewasa-cowo .avatar-head {
+      width: 50px;
+      height: 53px;
+      border-radius: 25px 25px 21px 21px;
+    }
+    .avatar-anak-cewe .avatar-head,
+    .avatar-anak-cowo .avatar-head {
+      width: 60px;
+      height: 58px;
+      border-radius: 30px 30px 27px 27px;
+      box-shadow: inset 0 -2px 6px var(--dti-skin-shadow), 0 5px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Hair Back Layer */
+    .avatar-hair-back {
+      position: absolute;
+      top: -6px;
+      left: -10px;
+      right: -10px;
+      height: 90px;
+      z-index: 4;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    /* Hair Front / Bangs Layer */
+    .avatar-hair-front {
+      position: absolute;
+      top: -8px;
+      left: -6px;
+      right: -6px;
+      height: 48px;
+      z-index: 22;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    /* Head Accessory */
+    .avatar-accessory {
+      position: absolute;
+      top: -24px;
+      font-size: 1.8rem;
+      z-index: 30;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+
+    /* Handheld Accessory */
+    .avatar-handheld {
+      position: absolute;
+      right: 4px;
+      bottom: 60px;
+      font-size: 1.7rem;
+      z-index: 28;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+      animation: floatHandheld 3s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes floatHandheld {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-4px) rotate(4deg); }
+    }
+
+    /* Clear, Detailed Expressive Face */
+    .avatar-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      z-index: 18;
+      pointer-events: none;
+      padding-top: 15px;
+    }
+    .avatar-anak-cewe .avatar-face,
+    .avatar-anak-cowo .avatar-face {
+      padding-top: 18px;
+    }
+
+    /* Eyebrows */
+    .avatar-eyebrows {
+      display: flex;
+      justify-content: space-between;
+      width: 32px;
+      height: 4px;
+      margin-bottom: 2px;
+    }
+    .avatar-anak-cewe .avatar-eyebrows,
+    .avatar-anak-cowo .avatar-eyebrows {
+      width: 38px;
+    }
+    .avatar-eyebrow {
+      width: 10px;
+      height: 2.5px;
+      background: #5c3512;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+    .avatar-dewasa-cewe .avatar-eyebrow {
+      border-radius: 3px 3px 1px 1px;
+      height: 2px;
+    }
+    .avatar-dewasa-cewe .avatar-eyebrow.left { transform: rotate(5deg); }
+    .avatar-dewasa-cewe .avatar-eyebrow.right { transform: rotate(-5deg); }
+
+    .avatar-dewasa-cowo .avatar-eyebrow {
+      height: 2.8px;
+      background: #3e2710;
+      border-radius: 2px;
+    }
+    .avatar-dewasa-cowo .avatar-eyebrow.left { transform: rotate(-4deg); }
+    .avatar-dewasa-cowo .avatar-eyebrow.right { transform: rotate(4deg); }
+
+    /* Eyes */
+    .avatar-eyes-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 34px;
+      height: 16px;
+      position: relative;
+    }
+    .avatar-anak-cewe .avatar-eyes-wrapper,
+    .avatar-anak-cowo .avatar-eyes-wrapper {
+      width: 40px;
+      height: 18px;
+    }
+
+    .avatar-eye {
+      width: 12px;
+      height: 14px;
+      background: #ffffff;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(40, 20, 10, 0.35);
+      transition: all 0.2s ease;
+    }
+    .avatar-anak-cewe .avatar-eye,
+    .avatar-anak-cowo .avatar-eye {
+      width: 15px;
+      height: 16px;
+    }
+
+    .eye-iris {
+      width: 9px;
+      height: 11px;
+      background: radial-gradient(circle at 40% 35%, #ec4899 0%, #be185d 60%, #500724 100%);
+      border-radius: 50%;
+      position: relative;
+    }
+    .avatar-dewasa-cowo .eye-iris {
+      background: radial-gradient(circle at 40% 35%, #38bdf8 0%, #0284c7 60%, #082f49 100%);
+    }
+    .avatar-anak-cowo .eye-iris {
+      background: radial-gradient(circle at 40% 35%, #34d399 0%, #059669 60%, #064e3b 100%);
+    }
+
+    .eye-pupil {
+      position: absolute;
+      top: 3px;
+      left: 2px;
+      width: 4px;
+      height: 5px;
+      background: #110515;
+      border-radius: 50%;
+    }
+
+    .eye-sparkle {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+    .eye-sparkle.main {
+      width: 3.5px;
+      height: 3.5px;
+      top: 1.5px;
+      left: 1.5px;
+      box-shadow: 0 0 2px #fff;
+    }
+    .eye-sparkle.sub {
+      width: 1.8px;
+      height: 1.8px;
+      bottom: 2px;
+      right: 1.5px;
+    }
+
+    /* Eyelash details */
+    .eye-lashes {
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #2a110a;
+      border-radius: 2px 2px 0 0;
+    }
+    .avatar-dewasa-cewe .eye-lashes::after,
+    .avatar-anak-cewe .eye-lashes::after {
+      content: '';
+      position: absolute;
+      right: -2px;
+      top: -2px;
+      width: 3px;
+      height: 3px;
+      border-top: 1.5px solid #2a110a;
+      border-right: 1.5px solid #2a110a;
+      border-radius: 0 2px 0 0;
+    }
+
+    /* Blush Cheeks */
+    .avatar-blush {
+      position: absolute;
+      top: 29px;
+      width: 11px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(255, 77, 148, 0.75) 0%, rgba(255, 77, 148, 0.1) 70%, transparent 100%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .avatar-blush.left { left: 4px; }
+    .avatar-blush.right { right: 4px; }
+
+    .avatar-anak-cewe .avatar-blush,
+    .avatar-anak-cowo .avatar-blush {
+      top: 33px;
+      width: 14px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 90, 150, 0.85) 0%, transparent 75%);
+    }
+
+    /* Nose */
+    .avatar-nose {
+      width: 3px;
+      height: 2px;
+      background: var(--dti-skin-shadow);
+      border-radius: 50%;
+      margin-top: 2px;
+      opacity: 0.75;
+    }
+
+    /* Mouth */
+    .avatar-mouth {
+      margin-top: 3px;
+      width: 9px;
+      height: 4.5px;
+      border-bottom: 2.2px solid #e11d48;
+      border-radius: 0 0 8px 8px;
+      background: rgba(225, 29, 72, 0.15);
+      transition: all 0.2s ease;
+    }
+
+    /* Facial Expression Variants */
+    .face-diva .avatar-mouth {
+      border-bottom: 2.5px solid #e11d48;
+      width: 10px;
+      height: 5px;
+      background: #ff4d94;
+      border-radius: 0 0 10px 10px;
+    }
+    .face-wink .avatar-eye.left {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .face-wink .avatar-eye.left .eye-iris { display: none; }
+    .face-wink .avatar-eye.left .eye-lashes {
+      top: 6px;
+      height: 2.5px;
+      background: #2a110a;
+      border-radius: 0 0 6px 6px;
+    }
+    .face-wink .avatar-eye.left::before {
+      content: '✨';
+      position: absolute;
+      top: -4px;
+      left: 1px;
+      font-size: 0.65rem;
+    }
+    .face-slay .avatar-eye {
+      border-radius: 40% 60% 40% 60%;
+      height: 11px;
+    }
+    .face-slay .avatar-mouth {
+      border-bottom: 3px solid #be185d;
+      background: #f43f5e;
+      width: 9px;
+      height: 4px;
+    }
+    .face-happy .avatar-eye {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .face-happy .avatar-eye .eye-iris { display: none; }
+    .face-happy .avatar-eye::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 1px;
+      width: 10px;
+      height: 5px;
+      border-top: 2.5px solid #2a110a;
+      border-radius: 8px 8px 0 0;
+    }
+    .face-happy .avatar-mouth {
+      width: 11px;
+      height: 6px;
+      background: #e11d48;
+      border: 1px solid #9f1239;
+      border-radius: 0 0 12px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .face-happy .avatar-mouth::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 2px;
+      width: 7px;
+      height: 3px;
+      background: #fda4af;
+      border-radius: 50% 50% 0 0;
+    }
+    .face-cool .avatar-eyebrow.right {
+      transform: translateY(-2px) rotate(-8deg);
+    }
+    .face-cool .avatar-mouth {
+      width: 8px;
+      height: 3px;
+      border-bottom: 2.5px solid #374151;
+      transform: rotate(6deg) translateX(1px);
+    }
+    .face-puppy .avatar-eye {
+      width: 15px;
+      height: 17px;
+    }
+    .face-puppy .eye-iris {
+      width: 12px;
+      height: 14px;
+    }
+    .face-puppy .avatar-mouth {
+      width: 6px;
+      height: 3px;
+      border-bottom: 2px solid #e11d48;
+    }
+
+    /* Neck, Torso & Arms */
+    .avatar-torso-wrapper {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      margin-top: -6px;
+      z-index: 10;
+    }
+
+    .avatar-neck {
+      position: absolute;
+      top: 0;
+      background: var(--dti-skin);
+      box-shadow: inset 0 -2px 3px var(--dti-skin-shadow);
+      z-index: 9;
+      border-radius: 2px;
+    }
+    .avatar-dewasa-cewe .avatar-neck { width: 10px; height: 9px; }
+    .avatar-dewasa-cowo .avatar-neck { width: 13px; height: 9px; }
+    .avatar-anak-cewe .avatar-neck,
+    .avatar-anak-cowo .avatar-neck { width: 11px; height: 5px; }
+
+    .avatar-torso {
+      background: var(--dti-skin);
+      position: relative;
+      z-index: 10;
+      box-shadow: inset 0 -2px 4px var(--dti-skin-shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.25s ease;
+    }
+
+    .avatar-dewasa-cewe .avatar-torso {
+      width: 44px;
+      height: 72px;
+      border-radius: 10px 10px 14px 14px;
+      margin-top: 5px;
+    }
+    .avatar-dewasa-cowo .avatar-torso {
+      width: 54px;
+      height: 75px;
+      border-radius: 12px 12px 8px 8px;
+      margin-top: 5px;
+    }
+    .avatar-anak-cewe .avatar-torso,
+    .avatar-anak-cowo .avatar-torso {
+      width: 46px;
+      height: 48px;
+      border-radius: 14px 14px 12px 12px;
+      margin-top: 2px;
+    }
+
+    .avatar-arm {
+      position: absolute;
+      top: 6px;
+      background: var(--dti-skin);
+      box-shadow: inset 0 -2px 3px var(--dti-skin-shadow);
+      border-radius: 6px;
+      z-index: 8;
+      transition: all 0.25s ease;
+    }
+    .avatar-arm.left {
+      left: -9px;
+      transform-origin: top center;
+    }
+    .avatar-arm.right {
+      right: -9px;
+      transform-origin: top center;
+    }
+
+    .avatar-dewasa-cewe .avatar-arm { width: 9px; height: 68px; }
+    .avatar-dewasa-cewe .avatar-arm.left { transform: rotate(8deg); }
+    .avatar-dewasa-cewe .avatar-arm.right { transform: rotate(-10deg); }
+
+    .avatar-dewasa-cowo .avatar-arm { width: 11px; height: 72px; }
+    .avatar-dewasa-cowo .avatar-arm.left { transform: rotate(5deg); }
+    .avatar-dewasa-cowo .avatar-arm.right { transform: rotate(-5deg); }
+
+    .avatar-anak-cewe .avatar-arm,
+    .avatar-anak-cowo .avatar-arm { width: 9px; height: 42px; }
+    .avatar-anak-cewe .avatar-arm.left { transform: rotate(14deg); }
+    .avatar-anak-cewe .avatar-arm.right { transform: rotate(-14deg); }
+
+    /* Outfit layer */
+    .avatar-outfit {
+      position: absolute;
+      top: 0;
+      left: -5px;
+      right: -5px;
+      height: 100%;
+      z-index: 12;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: inherit;
+    }
+
+    /* Legs Base */
+    .avatar-legs-wrapper {
+      display: flex;
+      gap: 8px;
+      margin-top: -6px;
+      z-index: 7;
+      transition: all 0.25s ease;
+    }
+    .avatar-leg {
+      background: var(--dti-skin);
+      box-shadow: inset 0 -2px 3px var(--dti-skin-shadow);
+      position: relative;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      transition: all 0.25s ease;
+    }
+
+    .avatar-dewasa-cewe .avatar-leg { width: 12px; height: 90px; }
+    .avatar-dewasa-cowo .avatar-leg { width: 14px; height: 92px; }
+    .avatar-anak-cewe .avatar-leg,
+    .avatar-anak-cowo .avatar-leg { width: 12px; height: 46px; }
+
+    .avatar-sock {
+      width: 100%;
+      height: 0;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .avatar-shoe {
+      position: absolute;
+      bottom: 0;
+      left: -2px;
+      right: -2px;
+      height: 18px;
+      border-radius: 5px 5px 3px 3px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      z-index: 15;
+      transition: all 0.2s ease;
+    }
+    .avatar-dewasa-cewe .avatar-shoe {
+      height: 20px;
+      border-radius: 6px 6px 2px 2px;
+    }
+    .avatar-dewasa-cowo .avatar-shoe {
+      height: 18px;
+      left: -3px;
+      right: -3px;
+      border-radius: 5px;
+    }
+    .avatar-anak-cewe .avatar-shoe,
+    .avatar-anak-cowo .avatar-shoe {
+      height: 15px;
+      border-radius: 7px;
+    }
+
+    /* Wardrobe Panel */
+    .dti-wardrobe {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 105, 180, 0.28);
+      border-radius: 20px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .dti-cat-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .dti-cat-tabs::-webkit-scrollbar { display: none; }
+
+    .dti-cat-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffd6ec;
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .dti-cat-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+    .dti-cat-btn.active {
+      background: linear-gradient(135deg, #ff2e8c, #ff75b9);
+      color: #fff;
+      border-color: #ff99d6;
+      box-shadow: 0 3px 10px rgba(255, 46, 140, 0.4);
+    }
+
+    .dti-item-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      max-height: 145px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding-right: 2px;
+    }
+
+    .dti-item-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+      padding: 4px;
+      text-align: center;
+    }
+    .dti-item-card .item-emoji {
+      font-size: 1.45rem;
+      line-height: 1;
+    }
+    .dti-item-card .item-name {
+      font-size: 0.62rem;
+      color: #ffd6ec;
+      font-weight: 600;
+      margin-top: 3px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dti-item-card:hover {
+      transform: scale(1.06);
+      background: rgba(255, 105, 180, 0.22);
+      border-color: rgba(255, 105, 180, 0.5);
+    }
+    .dti-item-card.active {
+      background: linear-gradient(135deg, rgba(255, 46, 140, 0.45), rgba(255, 117, 185, 0.45));
+      border-color: #ff85c0;
+      box-shadow: 0 0 14px rgba(255, 46, 140, 0.6);
+      transform: scale(1.03);
+    }
+    .dti-item-card.active .item-name {
+      color: #fff;
+      font-weight: 800;
+    }
+
+    /* =========================================================================
+       GAME 5: PURBLE PLACE (LILAC / LAVENDER) STYLES
+       ========================================================================= */
+    .purble-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .purble-order-card {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(126, 34, 206, 0.35));
+      border: 2px solid rgba(216, 180, 254, 0.5);
+      border-radius: 20px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
+    }
+
+    .purble-order-target {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .purble-order-preview {
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .conveyor-box {
+      width: 100%;
+      height: 220px;
+      background: radial-gradient(circle, rgba(192, 132, 252, 0.15) 0%, rgba(30, 10, 40, 0.8) 80%);
+      border: 2px solid rgba(192, 132, 252, 0.4);
+      border-radius: 24px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(126, 34, 206, 0.3);
+    }
+
+    .conveyor-belt {
+      position: absolute;
+      bottom: 25px;
+      width: 100%;
+      height: 35px;
+      background: repeating-linear-gradient(90deg, #4c1d95, #4c1d95 20px, #3b0764 20px, #3b0764 40px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      border-top: 2px solid #a855f7;
+    }
+
+    .purble-cake-stage {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .purble-cake-base {
+      width: 120px;
+      height: 48px;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: inset 0 3px 5px rgba(255, 255, 255, 0.5), inset 0 -3px 5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .purble-stations {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .station-btn {
+      background: rgba(168, 85, 247, 0.18);
+      border: 1px solid rgba(216, 180, 254, 0.3);
+      border-radius: 16px;
+      padding: 8px 4px;
+      color: #f3e8ff;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .station-btn:hover { background: rgba(168, 85, 247, 0.35); transform: translateY(-2px); }
+    .station-btn span.emoji { font-size: 1.4rem; }
+
+    /* Common Buttons */
+    .btn-action {
+      background: linear-gradient(135deg, #ff2e8c, #ff75b9);
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover { transform: translateY(-2px); }
+
+    /* Modal / Drawer */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(14, 4, 14, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 16px;
+    }
+    .modal-backdrop.show { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: linear-gradient(145deg, #240c20, #160614);
+      border: 2px solid #ff70b8;
+      border-radius: 28px;
+      width: 100%;
+      max-width: 380px;
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 77, 148, 0.4);
+    }
+
+    .game-grid-drawer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .game-card-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 18px;
+      padding: 14px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      transition: all 0.2s ease;
+    }
+    .game-card-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 18px rgba(255, 77, 148, 0.4);
+    }
+    .game-card-btn .game-icon { font-size: 2.2rem; }
+    .game-card-btn .game-name { font-weight: 800; font-size: 0.85rem; }
+
+    /* Screen shake */
+    .shake { animation: shakeScreen 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+    .mega-shake { animation: megaShakeScreen 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+    @keyframes shakeScreen {
+      10%, 90% { transform: translate3d(-2px, 1px, 0); }
+      20%, 80% { transform: translate3d(3px, -2px, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 2px, 0); }
+      40%, 60% { transform: translate3d(4px, -1px, 0); }
+    }
+    @keyframes megaShakeScreen {
+      10%, 90% { transform: translate3d(-4px, 2px, 0) scale(1.01); }
+      20%, 80% { transform: translate3d(5px, -4px, 0) scale(1.02); }
+      30%, 50%, 70% { transform: translate3d(-6px, 4px, 0) scale(1.02); }
+      40%, 60% { transform: translate3d(6px, -2px, 0) scale(1.01); }
+    }
+    @keyframes floatScore {
+      0% { transform: translate(-50%, 0) scale(0.3); opacity: 0; }
+      20% { transform: translate(-50%, -18px) scale(1.22); opacity: 1; }
+      65% { transform: translate(-50%, -45px) scale(1.04); opacity: 1; }
+      100% { transform: translate(-50%, -75px) scale(0.85); opacity: 0; }
+    }
+    @keyframes cellVanish {
+      0% { transform: scale(1); opacity: 1; filter: brightness(1.6); }
+      50% { transform: scale(1.2); opacity: 0.8; filter: brightness(2); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 14px rgba(255, 46, 140, 0.4); transform: scale(1); }
+      100% { box-shadow: 0 4px 22px rgba(255, 46, 140, 0.8); transform: scale(1.04); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow" id="ambient-glow"></div>
+  <canvas id="particle-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="header-top">
+        <div class="brand-title" id="main-brand-title">
+          <span>💖</span> Pink Blast!
+        </div>
+        <div class="header-actions">
+          <button id="btn-more-games" class="btn-more-games">
+            🎮 More Games
+          </button>
+          <button id="btn-sound-global" class="icon-btn" title="Suara">🔊</button>
+        </div>
+      </div>
+
+      <!-- Quick Switcher Tabs -->
+      <div class="game-tabs">
+        <div class="tab-pill tab-blockblast active" data-game="blockblast">💖 Block Blast</div>
+        <div class="tab-pill tab-tictactoe" data-game="tictactoe">🩵 Tic Tac Toe</div>
+        <div class="tab-pill tab-baking" data-game="baking">🧁 Cake Bakery</div>
+        <div class="tab-pill tab-dressup" data-game="dressup">👗 Dress Up</div>
+        <div class="tab-pill tab-purble" data-game="purble">💜 Purble Place</div>
+      </div>
+    </header>
+
+    <!-- =========================================================================
+         GAME 1: PINK BLOCK BLAST
+         ========================================================================= -->
+    <div class="game-view active" id="view-blockblast">
+      <div class="bb-scoreboard">
+        <div class="score-card">
+          <div class="score-label">✨ Skor</div>
+          <div class="score-value" id="current-score">0</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">👑 Terbaik</div>
+          <div class="score-value" id="high-score">0</div>
+        </div>
+      </div>
+
+      <div class="combo-pill" id="combo-pill">
+        <div class="combo-badge" id="combo-text">COMBO x2! 🔥</div>
+      </div>
+
+      <div class="board-wrapper" id="board-wrapper">
+        <div class="board-grid" id="board-grid"></div>
+      </div>
+
+      <div class="dock-container" id="dock-container">
+        <div class="piece-slot" id="slot-0"></div>
+        <div class="piece-slot" id="slot-1"></div>
+        <div class="piece-slot" id="slot-2"></div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         GAME 2: TIC TAC TOE (BIRU MUDA)
+         ========================================================================= -->
+    <div class="game-view" id="view-tictactoe">
+      <div class="ttt-container">
+        <div class="ttt-header">
+          <div class="ttt-mode-select">
+            <button class="ttt-mode-btn active" id="ttt-mode-ai">vs Robot 🤖</button>
+            <button class="ttt-mode-btn" id="ttt-mode-2p">2 Pemain 👥</button>
+          </div>
+          <div class="ttt-scoreboard">
+            <div class="ttt-score-box">
+              <div class="ttt-score-label">Pemain X 🩵</div>
+              <div class="ttt-score-val" id="ttt-score-x">0</div>
+            </div>
+            <div class="ttt-score-box">
+              <div class="ttt-score-label">Seri 🤝</div>
+              <div class="ttt-score-val" id="ttt-score-draw">0</div>
+            </div>
+            <div class="ttt-score-box">
+              <div class="ttt-score-label">Pemain O 🌸</div>
+              <div class="ttt-score-val" id="ttt-score-o">0</div>
+            </div>
+          </div>
+          <div class="ttt-status-pill" id="ttt-status">Giliran: Pemain X 🩵</div>
+        </div>
+
+        <div class="ttt-board" id="ttt-board">
+          <div class="ttt-cell" data-idx="0"></div>
+          <div class="ttt-cell" data-idx="1"></div>
+          <div class="ttt-cell" data-idx="2"></div>
+          <div class="ttt-cell" data-idx="3"></div>
+          <div class="ttt-cell" data-idx="4"></div>
+          <div class="ttt-cell" data-idx="5"></div>
+          <div class="ttt-cell" data-idx="6"></div>
+          <div class="ttt-cell" data-idx="7"></div>
+          <div class="ttt-cell" data-idx="8"></div>
+        </div>
+
+        <button class="btn-action" id="btn-ttt-reset" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">
+          <span>🔄 Ronde Baru</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         GAME 3: SWEET CAKE BAKERY (GAME BAKING)
+         ========================================================================= -->
+    <div class="game-view" id="view-baking">
+      <div class="bake-container">
+        <div class="bake-display">
+          <div class="cake-plate"></div>
+          <div class="cake-assembly" id="cake-assembly">
+            <div class="cake-tier tier-bottom" id="bake-tier-1" style="background: #fed7aa;">
+              <div class="frosting-drip" id="bake-frosting-1" style="background: #f472b6;"></div>
+            </div>
+            <div class="cake-tier tier-middle" id="bake-tier-2" style="background: #fed7aa;">
+              <div class="frosting-drip" id="bake-frosting-2" style="background: #f472b6;"></div>
+            </div>
+            <div class="cake-tier tier-top" id="bake-tier-3" style="background: #fed7aa;">
+              <div class="frosting-drip" id="bake-frosting-3" style="background: #f472b6;"></div>
+              <div class="cake-toppings" id="bake-toppings">🍓🍓</div>
+            </div>
+          </div>
+          <div class="bake-oven-overlay" id="bake-oven">
+            <div style="font-size: 3rem;">🔥</div>
+            <div style="font-weight: 800; font-size: 1.2rem; color: #fff;">Memanggang Kue... ♨️</div>
+          </div>
+        </div>
+
+        <div class="bake-controls">
+          <div class="bake-control-row">
+            <div class="bake-control-label">1. Rasa Adonan Kue</div>
+            <div class="bake-options">
+              <button class="bake-opt-btn active" data-flavor="vanilla">🍰 Vanilla</button>
+              <button class="bake-opt-btn" data-flavor="chocolate">🍫 Cokelat</button>
+              <button class="bake-opt-btn" data-flavor="strawberry">🍓 Stroberi</button>
+              <button class="bake-opt-btn" data-flavor="matcha">🍵 Matcha</button>
+            </div>
+          </div>
+
+          <div class="bake-control-row">
+            <div class="bake-control-label">2. Krim Frosting</div>
+            <div class="bake-options">
+              <button class="bake-opt-btn active" data-frosting="pink">💖 Pink Sakura</button>
+              <button class="bake-opt-btn" data-frosting="white">🤍 Cream Vanilla</button>
+              <button class="bake-opt-btn" data-frosting="choco">🍫 Dark Choco</button>
+              <button class="bake-opt-btn" data-frosting="lavender">💜 Lavender</button>
+              <button class="bake-opt-btn" data-frosting="blue">🩵 Mint Blue</button>
+            </div>
+          </div>
+
+          <div class="bake-control-row">
+            <div class="bake-control-label">3. Topping & Lilin</div>
+            <div class="bake-options">
+              <button class="bake-opt-btn active" data-topping="strawberries">🍓 Stroberi</button>
+              <button class="bake-opt-btn" data-topping="cherries">🍒 Ceri</button>
+              <button class="bake-opt-btn" data-topping="candles">🕯️ Lilin Pesta</button>
+              <button class="bake-opt-btn" data-topping="candies">🍬 Permen Warna</button>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button class="btn-action" id="btn-bake-oven" style="flex: 1; background: linear-gradient(135deg, #ea580c, #fb923c);">
+              <span>🔥 Panggang Kue!</span>
+            </button>
+            <button class="btn-action" id="btn-bake-celebrate" style="flex: 1; background: linear-gradient(135deg, #db2777, #f472b6);">
+              <span>🎉 Rayakan Pesta!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         GAME 4: DRESS TO IMPRESS (PINK GLAM)
+         ========================================================================= -->
+    <div class="game-view" id="view-dressup">
+      <div class="dti-container">
+        <!-- Character Profile Switcher (Dewasa vs Anak, Cewe vs Cowo) -->
+        <div class="dti-profile-bar">
+          <div class="dti-profile-group">
+            <span class="dti-profile-label">Usia:</span>
+            <div class="dti-toggle-group">
+              <button class="dti-pill-btn active" data-age="dewasa" id="btn-dti-age-dewasa">💃 Dewasa</button>
+              <button class="dti-pill-btn" data-age="anak" id="btn-dti-age-anak">👶 Anak Kecil</button>
+            </div>
+          </div>
+          <div class="dti-profile-group">
+            <span class="dti-profile-label">Gender:</span>
+            <div class="dti-toggle-group">
+              <button class="dti-pill-btn active" data-gender="cewe" id="btn-dti-gender-cewe">👧 Cewek</button>
+              <button class="dti-pill-btn" data-gender="cowo" id="btn-dti-gender-cowo">👦 Cowok</button>
+            </div>
+          </div>
+          <button class="dti-random-btn" id="btn-dti-random" title="Acak Padu Padan Busana!">🎲 Acak</button>
+        </div>
+
+        <!-- Runway Stage -->
+        <div class="dti-stage" id="dti-stage">
+          <div class="dti-spotlight"></div>
+          <div class="dti-runway-floor"></div>
+          <div class="dti-camera-flash" id="dti-flash"></div>
+
+          <!-- Avatar Rigging -->
+          <div class="dti-avatar-canvas avatar-dewasa-cewe" id="dti-avatar">
+            <!-- Head Accessory (Tiaras, Hats, Ribbons) -->
+            <div class="avatar-accessory" id="dti-acc-display">👑</div>
+
+            <!-- Handheld Prop (Bags, Teddy bear, Boba, Pet, Guitar) -->
+            <div class="avatar-handheld" id="dti-handheld-display">👜</div>
+
+            <!-- Head & Expressive Face -->
+            <div class="avatar-head" id="dti-avatar-head">
+              <!-- Hair Back Layer -->
+              <div class="avatar-hair-back" id="dti-hair-back"></div>
+
+              <!-- Face & Expressive Features -->
+              <div class="avatar-face face-diva" id="dti-face-container">
+                <div class="avatar-eyebrows">
+                  <div class="avatar-eyebrow left" id="dti-eyebrow-left"></div>
+                  <div class="avatar-eyebrow right" id="dti-eyebrow-right"></div>
+                </div>
+                <div class="avatar-eyes-wrapper" id="dti-eyes-wrapper">
+                  <div class="avatar-eye left" id="dti-eye-left">
+                    <div class="eye-iris">
+                      <div class="eye-pupil"></div>
+                      <div class="eye-sparkle main"></div>
+                      <div class="eye-sparkle sub"></div>
+                    </div>
+                    <div class="eye-lashes"></div>
+                  </div>
+                  <div class="avatar-eye right" id="dti-eye-right">
+                    <div class="eye-iris">
+                      <div class="eye-pupil"></div>
+                      <div class="eye-sparkle main"></div>
+                      <div class="eye-sparkle sub"></div>
+                    </div>
+                    <div class="eye-lashes"></div>
+                  </div>
+                </div>
+                <div class="avatar-blush left"></div>
+                <div class="avatar-blush right"></div>
+                <div class="avatar-nose"></div>
+                <div class="avatar-mouth" id="dti-mouth"></div>
+              </div>
+
+              <!-- Hair Front Layer (Bangs & Framing) -->
+              <div class="avatar-hair-front" id="dti-hair-front"></div>
+            </div>
+
+            <!-- Neck, Torso & Arms -->
+            <div class="avatar-torso-wrapper">
+              <div class="avatar-arm left" id="dti-arm-left"></div>
+              <div class="avatar-neck" id="dti-neck"></div>
+              <div class="avatar-torso" id="dti-torso">
+                <div class="avatar-outfit" id="dti-outfit-display"></div>
+              </div>
+              <div class="avatar-arm right" id="dti-arm-right"></div>
+            </div>
+
+            <!-- Legs & Shoes -->
+            <div class="avatar-legs-wrapper" id="dti-legs">
+              <div class="avatar-leg left" id="dti-leg-left">
+                <div class="avatar-sock" id="dti-sock-left"></div>
+                <div class="avatar-shoe" id="dti-shoe-left"></div>
+              </div>
+              <div class="avatar-leg right" id="dti-leg-right">
+                <div class="avatar-sock" id="dti-sock-right"></div>
+                <div class="avatar-shoe" id="dti-shoe-right"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wardrobe Category Tabs & Selection Grid -->
+        <div class="dti-wardrobe">
+          <div class="dti-cat-tabs">
+            <button class="dti-cat-btn active" data-cat="outfit">👗 Baju</button>
+            <button class="dti-cat-btn" data-cat="hair">💇 Rambut</button>
+            <button class="dti-cat-btn" data-cat="face">💄 Wajah</button>
+            <button class="dti-cat-btn" data-cat="accessory">👑 Aksesoris</button>
+            <button class="dti-cat-btn" data-cat="handheld">👜 Pegangan</button>
+            <button class="dti-cat-btn" data-cat="shoes">👠 Sepatu</button>
+            <button class="dti-cat-btn" data-cat="skin">🎨 Kulit</button>
+          </div>
+          <div class="dti-item-grid" id="dti-items">
+            <!-- items injected by JS -->
+          </div>
+          <button class="btn-action" id="btn-dti-runway" style="width: 100%; margin-top: 4px;">
+            <span>✨ Fashion Runway Show!</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         GAME 5: PURBLE PLACE (LILAC / LAVENDER)
+         ========================================================================= -->
+    <div class="game-view" id="view-purble">
+      <div class="purble-container">
+        <div class="purble-order-card">
+          <div>
+            <div style="font-size: 0.72rem; color: #e9d5ff; font-weight: 700; text-transform: uppercase;">Pesanan Pelanggan:</div>
+            <div id="purble-target-text" style="font-family: var(--font-title); font-size: 1rem; font-weight: 800; color: #fff;">Kue Lilac Hati 💜</div>
+          </div>
+          <div class="purble-order-preview" id="purble-target-preview">💜</div>
+        </div>
+
+        <div class="conveyor-box">
+          <div class="conveyor-belt"></div>
+          <div class="purble-cake-stage" id="purble-conveyor-cake">
+            <div class="purble-cake-base" id="purble-build-cake" style="background: #c084fc;">
+              <span id="purble-build-emoji">💜</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="purble-stations">
+          <button class="station-btn" data-action="shape">
+            <span class="emoji">🔲</span>
+            <span>1. Bentuk</span>
+          </button>
+          <button class="station-btn" data-action="flavor">
+            <span class="emoji">🍇</span>
+            <span>2. Rasa</span>
+          </button>
+          <button class="station-btn" data-action="frosting">
+            <span class="emoji">🧁</span>
+            <span>3. Krim</span>
+          </button>
+          <button class="station-btn" data-action="topping">
+            <span class="emoji">🍒</span>
+            <span>4. Topping</span>
+          </button>
+        </div>
+
+        <button class="btn-action" id="btn-purble-deliver" style="width: 100%; background: linear-gradient(135deg, #7e22ce, #c084fc);">
+          <span>🚀 Kirim Pesanan Kue!</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MORE GAMES DRAWER MODAL -->
+  <div class="modal-backdrop" id="modal-more-games">
+    <div class="modal-card">
+      <div style="font-size: 2.8rem; margin-bottom: 6px;">🎮</div>
+      <h2 style="font-family: var(--font-title); font-weight: 900; font-size: 1.8rem; margin-bottom: 4px;">Pilih Permainan</h2>
+      <p style="font-size: 0.85rem; color: #ffd6ec; margin-bottom: 12px;">Mau main game seru yang mana sekarang?</p>
+
+      <div class="game-grid-drawer">
+        <div class="game-card-btn" data-select="blockblast" style="border-color: #ff4d94;">
+          <div class="game-icon">💖</div>
+          <div class="game-name">Block Blast</div>
+        </div>
+        <div class="game-card-btn" data-select="tictactoe" style="border-color: #38bdf8;">
+          <div class="game-icon">🩵</div>
+          <div class="game-name">Tic Tac Toe</div>
+        </div>
+        <div class="game-card-btn" data-select="baking" style="border-color: #fb923c;">
+          <div class="game-icon">🧁</div>
+          <div class="game-name">Cake Bakery</div>
+        </div>
+        <div class="game-card-btn" data-select="dressup" style="border-color: #f472b6;">
+          <div class="game-icon">👗</div>
+          <div class="game-name">Dress to Impress</div>
+        </div>
+        <div class="game-card-btn" data-select="purble" style="border-color: #c084fc; grid-column: span 2;">
+          <div class="game-icon">💜</div>
+          <div class="game-name">Purble Place Cake Shop</div>
+        </div>
+      </div>
+
+      <button class="btn-action" id="btn-close-drawer" style="width: 100%;">Tutup</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER / RESULT POPUP -->
+  <div class="modal-backdrop" id="generic-modal">
+    <div class="modal-card">
+      <div id="gen-modal-emoji" style="font-size: 3.2rem; margin-bottom: 8px;">🎉</div>
+      <h2 id="gen-modal-title" style="font-family: var(--font-title); font-weight: 900; font-size: 1.8rem; margin-bottom: 6px;">Hebat!</h2>
+      <p id="gen-modal-desc" style="font-size: 0.95rem; color: #ffd6ec; margin-bottom: 18px;">Penampilan memukau!</p>
+      <button class="btn-action" id="btn-gen-modal-ok" style="width: 100%;">Lanjut 🌸</button>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       AUDIO SYNTHESIZER
+       ========================================================================= */
+    class GlobalSoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+      }
+      playTone(freq, type = 'sine', duration = 0.12, gainLevel = 0.2) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(gainLevel, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      }
+      playPop() { this.playTone(340, 'triangle', 0.1, 0.25); }
+      playChime() {
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 'sine', 0.2, 0.15), i * 50);
+        });
+      }
+      playWin() {
+        [440, 554.37, 659.25, 880].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 'triangle', 0.3, 0.2), i * 90);
+        });
+      }
+      playScoreRoll(points, combo = 1) {
+        const count = points >= 200 ? 4 : 2;
+        const base = 480 * Math.pow(1.08, Math.min(combo, 6));
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => this.playTone(base * Math.pow(1.2, i), 'sine', 0.15, 0.15), i * 40);
+        }
+      }
+    }
+
+    /* =========================================================================
+       PARTICLE SYSTEM
+       ========================================================================= */
+    class GlobalParticleSystem {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.shockwaves = [];
+        this.beams = [];
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.animate();
+      }
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+      spawnExplosion(x, y, color = '#ff4d94', count = 16) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 2.5 + Math.random() * 6;
+          this.particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 1.5,
+            size: 4 + Math.random() * 8,
+            color, alpha: 1,
+            decay: 0.02 + Math.random() * 0.02,
+            rotation: Math.random() * Math.PI * 2,
+            vRot: (Math.random() - 0.5) * 0.2,
+            shape: Math.random() > 0.5 ? 'heart' : 'sparkle'
+          });
+        }
+      }
+      spawnShockwave(x, y, color = '#ff4da6', maxRadius = 140) {
+        this.shockwaves.push({ x, y, radius: 10, maxRadius, speed: 7, color, lineWidth: 4, alpha: 1, decay: 0.04 });
+      }
+      spawnLaserBeam(x, y, w, h, color = 'rgba(255, 105, 180, 0.85)') {
+        this.beams.push({ x, y, w, h, color, alpha: 1, decay: 0.05 });
+      }
+      spawnCannons() {
+        const colors = ['#ff4d94', '#38bdf8', '#c084fc', '#fb923c', '#ffffff', '#ffd700'];
+        const w = window.innerWidth, h = window.innerHeight;
+        for (let i = 0; i < 30; i++) {
+          const sp1 = 8 + Math.random() * 8;
+          this.particles.push({
+            x: 20, y: h - 30, vx: Math.cos(-Math.PI / 4 + (Math.random() - 0.5) * 0.5) * sp1,
+            vy: Math.sin(-Math.PI / 4 + (Math.random() - 0.5) * 0.5) * sp1,
+            size: 6 + Math.random() * 8, color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: 1, decay: 0.015, rotation: 0, vRot: 0.2, shape: 'square'
+          });
+          const sp2 = 8 + Math.random() * 8;
+          this.particles.push({
+            x: w - 20, y: h - 30, vx: Math.cos(-3 * Math.PI / 4 + (Math.random() - 0.5) * 0.5) * sp2,
+            vy: Math.sin(-3 * Math.PI / 4 + (Math.random() - 0.5) * 0.5) * sp2,
+            size: 6 + Math.random() * 8, color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: 1, decay: 0.015, rotation: 0, vRot: -0.2, shape: 'square'
+          });
+        }
+      }
+      animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // Beams
+        for (let i = this.beams.length - 1; i >= 0; i--) {
+          const b = this.beams[i];
+          b.alpha -= b.decay;
+          if (b.alpha <= 0) { this.beams.splice(i, 1); continue; }
+          this.ctx.save();
+          this.ctx.globalAlpha = b.alpha;
+          this.ctx.fillStyle = b.color;
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = b.color;
+          this.ctx.fillRect(b.x, b.y, b.w, b.h);
+          this.ctx.restore();
+        }
+        // Shockwaves
+        for (let i = this.shockwaves.length - 1; i >= 0; i--) {
+          const sw = this.shockwaves[i];
+          sw.radius += sw.speed;
+          sw.alpha -= sw.decay;
+          if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) { this.shockwaves.splice(i, 1); continue; }
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          this.ctx.lineWidth = sw.lineWidth;
+          this.ctx.strokeStyle = sw.color;
+          this.ctx.globalAlpha = sw.alpha;
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+        // Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.alpha -= p.decay; p.rotation += p.vRot;
+          if (p.alpha <= 0) { this.particles.splice(i, 1); continue; }
+          this.ctx.save();
+          this.ctx.globalAlpha = p.alpha;
+          this.ctx.translate(p.x, p.y);
+          this.ctx.rotate(p.rotation);
+          this.ctx.fillStyle = p.color;
+          if (p.shape === 'heart') {
+            const s = p.size * 0.5;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
+            this.ctx.bezierCurveTo(-s, -s, -s * 1.5, s * 0.5, 0, s * 1.5);
+            this.ctx.bezierCurveTo(s * 1.5, s * 0.5, s, -s, 0, 0);
+            this.ctx.fill();
+          } else if (p.shape === 'square') {
+            this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          } else {
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+            this.ctx.fill();
+          }
+          this.ctx.restore();
+        }
+        requestAnimationFrame(() => this.animate());
+      }
+    }
+
+    /* Initialize Global Audio & Particles */
+    const sound = new GlobalSoundEngine();
+    const particles = new GlobalParticleSystem(document.getElementById('particle-canvas'));
+
+    /* =========================================================================
+       APP NAVIGATION CONTROLLER
+       ========================================================================= */
+    const tabPills = document.querySelectorAll('.tab-pill');
+    const gameViews = document.querySelectorAll('.game-view');
+    const brandTitle = document.getElementById('main-brand-title');
+    const ambientGlow = document.getElementById('ambient-glow');
+    const moreGamesBtn = document.getElementById('btn-more-games');
+    const moreGamesModal = document.getElementById('modal-more-games');
+    const closeDrawerBtn = document.getElementById('btn-close-drawer');
+    const gameCards = document.querySelectorAll('.game-card-btn');
+
+    const THEMES = {
+      blockblast: { title: '<span>💖</span> Pink Blast!', glow: 'rgba(255, 77, 148, 0.35)' },
+      tictactoe:  { title: '<span>🩵</span> Tic Tac Toe', glow: 'rgba(56, 189, 248, 0.35)' },
+      baking:     { title: '<span>🧁</span> Cake Bakery', glow: 'rgba(251, 146, 60, 0.35)' },
+      dressup:    { title: '<span>👗</span> Dress to Impress', glow: 'rgba(244, 114, 182, 0.35)' },
+      purble:     { title: '<span>💜</span> Purble Place', glow: 'rgba(192, 132, 252, 0.35)' }
+    };
+
+    function switchGame(gameKey) {
+      sound.playPop();
+      tabPills.forEach(tab => tab.classList.toggle('active', tab.dataset.game === gameKey));
+      gameViews.forEach(view => view.classList.toggle('active', view.id === `view-${gameKey}`));
+      
+      const theme = THEMES[gameKey];
+      if (theme) {
+        brandTitle.innerHTML = theme.title;
+        ambientGlow.style.background = `radial-gradient(circle, ${theme.glow} 0%, transparent 70%)`;
+      }
+      moreGamesModal.classList.remove('show');
+    }
+
+    tabPills.forEach(pill => pill.addEventListener('click', () => switchGame(pill.dataset.game)));
+    moreGamesBtn.addEventListener('click', () => { sound.playPop(); moreGamesModal.classList.add('show'); });
+    closeDrawerBtn.addEventListener('click', () => moreGamesModal.classList.remove('show'));
+    gameCards.forEach(card => card.addEventListener('click', () => switchGame(card.dataset.select)));
+
+    // Sound Toggle
+    const soundBtn = document.getElementById('btn-sound-global');
+    soundBtn.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      soundBtn.textContent = sound.enabled ? '🔊' : '🔇';
+      if (sound.enabled) sound.playPop();
+    });
+
+    /* =========================================================================
+       GAME 1 LOGIC: BLOCK BLAST (Pink Theme)
+       ========================================================================= */
+    const SHAPES = [
+      { matrix: [[1]], color: 1 },
+      { matrix: [[1, 1]], color: 2 },
+      { matrix: [[1], [1]], color: 2 },
+      { matrix: [[1, 1, 1]], color: 3 },
+      { matrix: [[1], [1], [1]], color: 3 },
+      { matrix: [[1, 1, 1, 1]], color: 4 },
+      { matrix: [[1], [1], [1], [1]], color: 4 },
+      { matrix: [[1, 1], [1, 1]], color: 6 },
+      { matrix: [[1, 1, 1], [1, 1, 1], [1, 1, 1]], color: 7 },
+      { matrix: [[1, 0], [1, 1]], color: 1 },
+      { matrix: [[0, 1], [1, 1]], color: 1 },
+      { matrix: [[1, 1], [1, 0]], color: 1 },
+      { matrix: [[1, 1], [0, 1]], color: 1 },
+      { matrix: [[1, 0, 0], [1, 0, 0], [1, 1, 1]], color: 2 },
+      { matrix: [[0, 0, 1], [0, 0, 1], [1, 1, 1]], color: 2 },
+      { matrix: [[1, 1, 1], [0, 1, 0]], color: 3 },
+      { matrix: [[0, 1, 0], [1, 1, 1]], color: 3 },
+      { matrix: [[1, 1, 0], [0, 1, 1]], color: 4 },
+      { matrix: [[0, 1, 1], [1, 1, 0]], color: 4 }
+    ];
+
+    class BlockBlastController {
+      constructor() {
+        this.board = Array(8).fill(null).map(() => Array(8).fill(0));
+        this.score = 0;
+        this.highScore = parseInt(localStorage.getItem('pink_blast_highscore')) || 0;
+        this.comboStreak = 0;
+        this.currentPieces = [null, null, null];
+        this.selectedPieceIndex = null;
+        this.dragState = { active: false, pieceIndex: null, pieceData: null, domElement: null, previewRow: -1, previewCol: -1 };
+
+        this.initDom();
+        this.bindEvents();
+        this.startNewGame();
+      }
+
+      initDom() {
+        this.boardGridEl = document.getElementById('board-grid');
+        this.boardWrapperEl = document.getElementById('board-wrapper');
+        this.currentScoreEl = document.getElementById('current-score');
+        this.highScoreEl = document.getElementById('high-score');
+        this.comboPillEl = document.getElementById('combo-pill');
+        this.comboTextEl = document.getElementById('combo-text');
+        this.slots = [document.getElementById('slot-0'), document.getElementById('slot-1'), document.getElementById('slot-2')];
+
+        this.boardGridEl.innerHTML = '';
+        this.cellElements = [];
+        for (let r = 0; r < 8; r++) {
+          this.cellElements[r] = [];
+          for (let c = 0; c < 8; c++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            this.boardGridEl.appendChild(cell);
+            this.cellElements[r][c] = cell;
+          }
+        }
+        this.highScoreEl.textContent = this.highScore;
+      }
+
+      bindEvents() {
+        window.addEventListener('pointermove', (e) => this.handleDragMove(e));
+        window.addEventListener('pointerup', (e) => this.handleDragEnd(e));
+        window.addEventListener('pointercancel', (e) => this.handleDragEnd(e));
+
+        this.boardGridEl.addEventListener('click', (e) => {
+          const cell = e.target.closest('.cell');
+          if (!cell || this.selectedPieceIndex === null) return;
+          const r = parseInt(cell.dataset.row);
+          const c = parseInt(cell.dataset.col);
+          const piece = this.currentPieces[this.selectedPieceIndex];
+          if (piece && this.canPlacePiece(piece, r, c)) {
+            this.placePiece(this.selectedPieceIndex, r, c);
+            this.selectedPieceIndex = null;
+            this.updateSelectionVisuals();
+          }
+        });
+      }
+
+      startNewGame() {
+        this.board = Array(8).fill(null).map(() => Array(8).fill(0));
+        this.score = 0;
+        this.comboStreak = 0;
+        this.currentScoreEl.textContent = '0';
+        this.comboPillEl.classList.remove('active');
+        this.renderBoard();
+        this.selectedPieceIndex = null;
+        this.generateNewPieces();
+      }
+
+      renderBoard() {
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const cell = this.cellElements[r][c];
+            cell.innerHTML = '';
+            cell.className = 'cell';
+            const val = this.board[r][c];
+            if (val > 0) {
+              const blk = document.createElement('div');
+              blk.className = `block color-${val}`;
+              cell.appendChild(blk);
+            }
+          }
+        }
+      }
+
+      generateNewPieces() {
+        for (let i = 0; i < 3; i++) {
+          const rand = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+          this.currentPieces[i] = { matrix: rand.matrix, color: rand.color, rows: rand.matrix.length, cols: rand.matrix[0].length };
+        }
+        this.renderDock();
+        this.checkAvailableMoves();
+      }
+
+      renderDock() {
+        for (let i = 0; i < 3; i++) {
+          const slot = this.slots[i];
+          slot.innerHTML = '';
+          const piece = this.currentPieces[i];
+          if (!piece) continue;
+
+          const pieceEl = document.createElement('div');
+          pieceEl.className = 'piece-wrapper';
+          pieceEl.dataset.slotIndex = i;
+          pieceEl.style.gridTemplateColumns = `repeat(${piece.cols}, 1fr)`;
+
+          for (let r = 0; r < piece.rows; r++) {
+            for (let c = 0; c < piece.cols; c++) {
+              const cell = document.createElement('div');
+              cell.className = piece.matrix[r][c] === 1 ? `piece-cell block color-${piece.color}` : 'piece-cell';
+              pieceEl.appendChild(cell);
+            }
+          }
+
+          pieceEl.addEventListener('pointerdown', (e) => this.handleDragStart(e, i, piece, pieceEl));
+          pieceEl.addEventListener('click', () => {
+            if (this.dragState.active) return;
+            sound.playPop();
+            this.selectedPieceIndex = this.selectedPieceIndex === i ? null : i;
+            this.updateSelectionVisuals();
+          });
+
+          slot.appendChild(pieceEl);
+        }
+      }
+
+      updateSelectionVisuals() {
+        for (let i = 0; i < 3; i++) {
+          const w = this.slots[i].querySelector('.piece-wrapper');
+          if (w) w.classList.toggle('selected', i === this.selectedPieceIndex);
+        }
+      }
+
+      handleDragStart(e, index, piece, element) {
+        if (e.button !== undefined && e.button !== 0) return;
+        e.preventDefault();
+        sound.playPop();
+        this.selectedPieceIndex = null;
+        this.updateSelectionVisuals();
+
+        const isTouch = e.pointerType === 'touch';
+        const verticalOffset = isTouch ? 70 : 0;
+
+        this.dragState.active = true;
+        this.dragState.pointerId = e.pointerId;
+        this.dragState.pieceIndex = index;
+        this.dragState.pieceData = piece;
+        this.dragState.domElement = element;
+        this.dragState.offsetY = verticalOffset;
+
+        try { element.setPointerCapture(e.pointerId); } catch (err) {}
+        element.classList.add('dragging');
+        this.positionDragElement(e.clientX, e.clientY - verticalOffset);
+      }
+
+      positionDragElement(x, y) {
+        if (!this.dragState.domElement) return;
+        this.dragState.domElement.style.left = `${x}px`;
+        this.dragState.domElement.style.top = `${y}px`;
+      }
+
+      handleDragMove(e) {
+        if (!this.dragState.active) return;
+        e.preventDefault();
+        const x = e.clientX;
+        const y = e.clientY - this.dragState.offsetY;
+        this.positionDragElement(x, y);
+
+        const targetCoord = this.findGridCellAtPos(x, y);
+        if (targetCoord && this.canPlacePiece(this.dragState.pieceData, targetCoord.row, targetCoord.col)) {
+          this.showPreview(this.dragState.pieceData, targetCoord.row, targetCoord.col);
+          this.dragState.previewRow = targetCoord.row;
+          this.dragState.previewCol = targetCoord.col;
+        } else {
+          this.clearPreview();
+          this.dragState.previewRow = -1;
+          this.dragState.previewCol = -1;
+        }
+      }
+
+      handleDragEnd(e) {
+        if (!this.dragState.active) return;
+        const { pieceIndex, previewRow, previewCol, domElement, pointerId } = this.dragState;
+
+        if (domElement && pointerId !== undefined) {
+          try { domElement.releasePointerCapture(pointerId); } catch (err) {}
+        }
+        this.clearPreview();
+        if (domElement) {
+          domElement.classList.remove('dragging');
+          domElement.style.left = '';
+          domElement.style.top = '';
+        }
+
+        if (previewRow >= 0 && previewCol >= 0) {
+          this.placePiece(pieceIndex, previewRow, previewCol);
+        }
+
+        this.dragState.active = false;
+        this.dragState.pieceIndex = null;
+        this.dragState.pieceData = null;
+        this.dragState.domElement = null;
+      }
+
+      findGridCellAtPos(clientX, clientY) {
+        const boardRect = this.boardGridEl.getBoundingClientRect();
+        const margin = 35;
+        if (clientX < boardRect.left - margin || clientX > boardRect.right + margin || clientY < boardRect.top - margin || clientY > boardRect.bottom + margin) return null;
+
+        const cellW = boardRect.width / 8;
+        const cellH = boardRect.height / 8;
+        const piece = this.dragState.pieceData;
+
+        let col = Math.round((clientX - boardRect.left) / cellW - piece.cols / 2);
+        let row = Math.round((clientY - boardRect.top) / cellH - piece.rows / 2);
+        if (col < 0) col = 0; if (row < 0) row = 0;
+        if (col + piece.cols > 8) col = 8 - piece.cols;
+        if (row + piece.rows > 8) row = 8 - piece.rows;
+        return { row, col };
+      }
+
+      showPreview(piece, startRow, startCol) {
+        this.clearPreview();
+        for (let r = 0; r < piece.rows; r++) {
+          for (let c = 0; c < piece.cols; c++) {
+            if (piece.matrix[r][c] === 1) {
+              const gr = startRow + r, gc = startCol + c;
+              if (gr < 8 && gc < 8) this.cellElements[gr][gc].classList.add('preview-valid');
+            }
+          }
+        }
+      }
+
+      clearPreview() {
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) this.cellElements[r][c].classList.remove('preview-valid');
+        }
+      }
+
+      canPlacePiece(piece, startRow, startCol) {
+        if (startRow + piece.rows > 8 || startCol + piece.cols > 8) return false;
+        for (let r = 0; r < piece.rows; r++) {
+          for (let c = 0; c < piece.cols; c++) {
+            if (piece.matrix[r][c] === 1 && this.board[startRow + r][startCol + c] !== 0) return false;
+          }
+        }
+        return true;
+      }
+
+      placePiece(slotIndex, startRow, startCol) {
+        const piece = this.currentPieces[slotIndex];
+        if (!piece) return;
+
+        let placedCellCount = 0;
+        let sumX = 0, sumY = 0;
+
+        for (let r = 0; r < piece.rows; r++) {
+          for (let c = 0; c < piece.cols; c++) {
+            if (piece.matrix[r][c] === 1) {
+              const gr = startRow + r, gc = startCol + c;
+              this.board[gr][gc] = piece.color;
+              placedCellCount++;
+              const rect = this.cellElements[gr][gc].getBoundingClientRect();
+              sumX += rect.left + rect.width / 2;
+              sumY += rect.top + rect.height / 2;
+            }
+          }
+        }
+
+        const avgX = sumX / placedCellCount;
+        const avgY = sumY / placedCellCount;
+
+        sound.playPop();
+        const pts = placedCellCount * 10;
+        this.animateScore(this.score + pts, pts, null, { x: avgX, y: avgY });
+
+        this.currentPieces[slotIndex] = null;
+        this.renderDock();
+        this.renderBoard();
+        this.checkAndClearLines();
+      }
+
+      checkAndClearLines() {
+        const fullRows = [];
+        const fullCols = [];
+
+        for (let r = 0; r < 8; r++) {
+          if (this.board[r].every(v => v !== 0)) fullRows.push(r);
+        }
+        for (let c = 0; c < 8; c++) {
+          let full = true;
+          for (let r = 0; r < 8; r++) { if (this.board[r][c] === 0) { full = false; break; } }
+          if (full) fullCols.push(c);
+        }
+
+        const totalLines = fullRows.length + fullCols.length;
+
+        if (totalLines > 0) {
+          this.comboStreak++;
+          this.showCombo(this.comboStreak, totalLines);
+          sound.playChime();
+
+          fullRows.forEach(r => {
+            const rect0 = this.cellElements[r][0].getBoundingClientRect();
+            const rect7 = this.cellElements[r][7].getBoundingClientRect();
+            particles.spawnLaserBeam(rect0.left, rect0.top + rect0.height * 0.1, rect7.right - rect0.left, rect0.height * 0.8);
+          });
+          fullCols.forEach(c => {
+            const rect0 = this.cellElements[0][c].getBoundingClientRect();
+            const rect7 = this.cellElements[7][c].getBoundingClientRect();
+            particles.spawnLaserBeam(rect0.left + rect0.width * 0.1, rect0.top, rect0.width * 0.8, rect7.bottom - rect0.top);
+          });
+
+          this.boardWrapperEl.classList.remove('shake', 'mega-shake');
+          void this.boardWrapperEl.offsetWidth;
+          this.boardWrapperEl.classList.add(totalLines >= 2 ? 'mega-shake' : 'shake');
+
+          const bRect = this.boardGridEl.getBoundingClientRect();
+          particles.spawnShockwave(bRect.left + bRect.width / 2, bRect.top + bRect.height / 2);
+
+          if (totalLines >= 2 || this.comboStreak >= 2) particles.spawnCannons();
+
+          const linePoints = totalLines * 100 * Math.max(1, this.comboStreak);
+          let title = '✨ NICE CLEAR!';
+          if (this.comboStreak >= 4) title = '👑 UNSTOPPABLE!';
+          else if (this.comboStreak >= 3) title = '🔥 MEGA COMBO!';
+          else if (this.comboStreak >= 2) title = '💖 SUPER COMBO!';
+          else if (totalLines >= 2) title = '💥 DOUBLE BLAST!';
+
+          this.animateScore(this.score + linePoints, linePoints, title, { x: bRect.left + bRect.width / 2, y: bRect.top + bRect.height / 2 });
+
+          const cellsToClear = new Set();
+          fullRows.forEach(r => { for (let c = 0; c < 8; c++) cellsToClear.add(`${r},${c}`); });
+          fullCols.forEach(c => { for (let r = 0; r < 8; r++) cellsToClear.add(`${r},${c}`); });
+
+          cellsToClear.forEach(coord => {
+            const [r, c] = coord.split(',').map(Number);
+            const cellEl = this.cellElements[r][c];
+            cellEl.classList.add('clearing');
+            const rect = cellEl.getBoundingClientRect();
+            particles.spawnExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, '#ff4d94', 12);
+          });
+
+          setTimeout(() => {
+            cellsToClear.forEach(coord => {
+              const [r, c] = coord.split(',').map(Number);
+              this.board[r][c] = 0;
+            });
+            this.renderBoard();
+            this.afterMoveComplete();
+          }, 280);
+
+        } else {
+          this.comboStreak = 0;
+          this.comboPillEl.classList.remove('active');
+          this.afterMoveComplete();
+        }
+      }
+
+      afterMoveComplete() {
+        if (this.currentPieces.every(p => p === null)) {
+          this.generateNewPieces();
+        } else {
+          this.checkAvailableMoves();
+        }
+      }
+
+      checkAvailableMoves() {
+        let anyCanFit = false;
+        for (let i = 0; i < 3; i++) {
+          const piece = this.currentPieces[i];
+          if (!piece) continue;
+          let fit = false;
+          for (let r = 0; r <= 8 - piece.rows; r++) {
+            for (let c = 0; c <= 8 - piece.cols; c++) {
+              if (this.canPlacePiece(piece, r, c)) { fit = true; break; }
+            }
+            if (fit) break;
+          }
+          const w = this.slots[i].querySelector('.piece-wrapper');
+          if (w) w.classList.toggle('disabled', !fit);
+          if (fit) anyCanFit = true;
+        }
+
+        if (!anyCanFit) {
+          setTimeout(() => {
+            sound.playTone(200, 'sawtooth', 0.4, 0.2);
+            showGenericModal('💔', 'Game Over!', `Skor Anda: ${this.score}`, () => this.startNewGame());
+          }, 500);
+        }
+      }
+
+      animateScore(targetScore, pointsAdded = 0, titleText = null, spawnPos = null) {
+        const start = this.score;
+        this.score = targetScore;
+        const card = this.currentScoreEl.closest('.score-card');
+        if (card) { card.classList.remove('scoring-pulse'); void card.offsetWidth; card.classList.add('scoring-pulse'); }
+
+        const dur = Math.min(450, 150 + pointsAdded * 0.3);
+        const startTime = performance.now();
+        const tick = (now) => {
+          const p = Math.min(1, (now - startTime) / dur);
+          const ease = 1 - Math.pow(1 - p, 3);
+          this.currentScoreEl.textContent = Math.round(start + (targetScore - start) * ease);
+          if (p < 1) requestAnimationFrame(tick);
+          else {
+            this.currentScoreEl.textContent = targetScore;
+            if (targetScore > this.highScore) {
+              this.highScore = targetScore;
+              this.highScoreEl.textContent = this.highScore;
+              localStorage.setItem('pink_blast_highscore', this.highScore);
+            }
+          }
+        };
+        requestAnimationFrame(tick);
+
+        if (pointsAdded > 0) sound.playScoreRoll(pointsAdded, this.comboStreak);
+        if (pointsAdded > 0 && spawnPos) this.spawnFloatingScore(spawnPos.x, spawnPos.y, pointsAdded, titleText);
+      }
+
+      spawnFloatingScore(x, y, points, title) {
+        const el = document.createElement('div');
+        el.className = 'floating-score';
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        if (title) {
+          const t = document.createElement('div');
+          t.className = 'score-title';
+          t.textContent = title;
+          el.appendChild(t);
+        }
+        const n = document.createElement('div');
+        n.className = 'score-num';
+        n.textContent = `+${points}`;
+        el.appendChild(n);
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 900);
+      }
+
+      showCombo(streak, lines) {
+        this.comboPillEl.classList.add('active');
+        this.comboTextEl.textContent = streak > 1 ? `COMBO x${streak}! ✨` : (lines > 1 ? `DOUBLE BLAST! 💥` : `LINE CLEAR!`);
+      }
+    }
+
+    /* =========================================================================
+       GAME 2 LOGIC: TIC TAC TOE (Light Blue / Biru Muda Theme)
+       ========================================================================= */
+    class TicTacToeController {
+      constructor() {
+        this.board = Array(9).fill(null);
+        this.currentPlayer = 'X'; // X is Blue, O is Pink
+        this.isAI = true;
+        this.gameOver = false;
+        this.scores = { X: 0, O: 0, draw: 0 };
+
+        this.cells = document.querySelectorAll('.ttt-cell');
+        this.statusEl = document.getElementById('ttt-status');
+        this.scoreXEl = document.getElementById('ttt-score-x');
+        this.scoreOEl = document.getElementById('ttt-score-o');
+        this.scoreDrawEl = document.getElementById('ttt-score-draw');
+        this.modeAIBtn = document.getElementById('ttt-mode-ai');
+        this.mode2PBtn = document.getElementById('ttt-mode-2p');
+        this.resetBtn = document.getElementById('btn-ttt-reset');
+
+        this.bindEvents();
+        this.resetRound();
+      }
+
+      bindEvents() {
+        this.cells.forEach(cell => {
+          cell.addEventListener('click', () => {
+            const idx = parseInt(cell.dataset.idx);
+            this.handleCellClick(idx);
+          });
+        });
+
+        this.modeAIBtn.addEventListener('click', () => {
+          sound.playPop();
+          this.isAI = true;
+          this.modeAIBtn.classList.add('active');
+          this.mode2PBtn.classList.remove('active');
+          this.resetRound();
+        });
+
+        this.mode2PBtn.addEventListener('click', () => {
+          sound.playPop();
+          this.isAI = false;
+          this.mode2PBtn.classList.add('active');
+          this.modeAIBtn.classList.remove('active');
+          this.resetRound();
+        });
+
+        this.resetBtn.addEventListener('click', () => {
+          sound.playPop();
+          this.resetRound();
+        });
+      }
+
+      resetRound() {
+        this.board = Array(9).fill(null);
+        this.currentPlayer = 'X';
+        this.gameOver = false;
+        this.statusEl.textContent = 'Giliran: Pemain X 🩵';
+        this.cells.forEach(c => {
+          c.textContent = '';
+          c.className = 'ttt-cell';
+        });
+      }
+
+      handleCellClick(idx) {
+        if (this.board[idx] || this.gameOver) return;
+        this.makeMove(idx, this.currentPlayer);
+
+        if (!this.gameOver && this.isAI && this.currentPlayer === 'O') {
+          setTimeout(() => this.makeAIMove(), 350);
+        }
+      }
+
+      makeMove(idx, player) {
+        this.board[idx] = player;
+        const cell = this.cells[idx];
+        cell.textContent = player === 'X' ? '🩵' : '🌸';
+        cell.classList.add(player === 'X' ? 'mark-x' : 'mark-o');
+        sound.playPop();
+
+        const winPattern = this.checkWin(player);
+        if (winPattern) {
+          this.gameOver = true;
+          winPattern.forEach(i => this.cells[i].classList.add('win-highlight'));
+          this.scores[player]++;
+          this.updateScoreboard();
+          this.statusEl.textContent = `Pemenang: Pemain ${player} 🎉`;
+          sound.playWin();
+          particles.spawnCannons();
+          return;
+        }
+
+        if (this.board.every(cell => cell !== null)) {
+          this.gameOver = true;
+          this.scores.draw++;
+          this.updateScoreboard();
+          this.statusEl.textContent = 'Permainan Seri! 🤝';
+          return;
+        }
+
+        this.currentPlayer = player === 'X' ? 'O' : 'X';
+        this.statusEl.textContent = `Giliran: Pemain ${this.currentPlayer} ${this.currentPlayer === 'X' ? '🩵' : '🌸'}`;
+      }
+
+      makeAIMove() {
+        if (this.gameOver) return;
+        // 1. Can AI win?
+        for (let i = 0; i < 9; i++) {
+          if (!this.board[i]) {
+            this.board[i] = 'O';
+            if (this.checkWin('O')) { this.board[i] = null; this.makeMove(i, 'O'); return; }
+            this.board[i] = null;
+          }
+        }
+        // 2. Block player X
+        for (let i = 0; i < 9; i++) {
+          if (!this.board[i]) {
+            this.board[i] = 'X';
+            if (this.checkWin('X')) { this.board[i] = null; this.makeMove(i, 'O'); return; }
+            this.board[i] = null;
+          }
+        }
+        // 3. Take center or random
+        const empties = this.board.map((v, i) => v === null ? i : null).filter(v => v !== null);
+        if (empties.includes(4)) { this.makeMove(4, 'O'); return; }
+        const rand = empties[Math.floor(Math.random() * empties.length)];
+        this.makeMove(rand, 'O');
+      }
+
+      checkWin(player) {
+        const wins = [
+          [0,1,2], [3,4,5], [6,7,8],
+          [0,3,6], [1,4,7], [2,5,8],
+          [0,4,8], [2,4,6]
+        ];
+        return wins.find(w => w.every(idx => this.board[idx] === player)) || null;
+      }
+
+      updateScoreboard() {
+        this.scoreXEl.textContent = this.scores.X;
+        this.scoreOEl.textContent = this.scores.O;
+        this.scoreDrawEl.textContent = this.scores.draw;
+      }
+    }
+
+    /* =========================================================================
+       GAME 3 LOGIC: SWEET CAKE BAKERY (Baking Game)
+       ========================================================================= */
+    class BakingGameController {
+      constructor() {
+        this.flavorColors = {
+          vanilla: '#fed7aa',
+          chocolate: '#78350f',
+          strawberry: '#f472b6',
+          matcha: '#84cc16'
+        };
+        this.frostingColors = {
+          pink: '#f472b6',
+          white: '#f8fafc',
+          choco: '#451a03',
+          lavender: '#c084fc',
+          blue: '#38bdf8'
+        };
+        this.toppingEmojis = {
+          strawberries: '🍓🍓',
+          cherries: '🍒🍒',
+          candles: '🕯️🕯️',
+          candies: '🍬🍭'
+        };
+
+        this.currentFlavor = 'vanilla';
+        this.currentFrosting = 'pink';
+        this.currentTopping = 'strawberries';
+
+        this.tiers = [
+          document.getElementById('bake-tier-1'),
+          document.getElementById('bake-tier-2'),
+          document.getElementById('bake-tier-3')
+        ];
+        this.frostings = [
+          document.getElementById('bake-frosting-1'),
+          document.getElementById('bake-frosting-2'),
+          document.getElementById('bake-frosting-3')
+        ];
+        this.toppingsEl = document.getElementById('bake-toppings');
+        this.ovenEl = document.getElementById('bake-oven');
+        this.bakeBtn = document.getElementById('btn-bake-oven');
+        this.celebrateBtn = document.getElementById('btn-bake-celebrate');
+
+        this.bindEvents();
+        this.updateCakeVisuals();
+      }
+
+      bindEvents() {
+        document.querySelectorAll('.bake-opt-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.playPop();
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.bake-opt-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (btn.dataset.flavor) this.currentFlavor = btn.dataset.flavor;
+            if (btn.dataset.frosting) this.currentFrosting = btn.dataset.frosting;
+            if (btn.dataset.topping) this.currentTopping = btn.dataset.topping;
+            this.updateCakeVisuals();
+          });
+        });
+
+        this.bakeBtn.addEventListener('click', () => {
+          sound.playTone(300, 'sine', 0.2, 0.2);
+          this.ovenEl.classList.add('baking');
+          setTimeout(() => {
+            this.ovenEl.classList.remove('baking');
+            sound.playWin();
+            particles.spawnCannons();
+            showGenericModal('🎂', 'Kue Matang Sempurna!', 'Kue terasa harum dan siap untuk didekorasi!');
+          }, 1200);
+        });
+
+        this.celebrateBtn.addEventListener('click', () => {
+          sound.playWin();
+          particles.spawnCannons();
+          showGenericModal('🎉', 'Pesta Kue Dimulai!', 'Semua orang menyukai kue buatan Anda yang cantik & lezat!');
+        });
+      }
+
+      updateCakeVisuals() {
+        const fColor = this.flavorColors[this.currentFlavor];
+        const frostColor = this.frostingColors[this.currentFrosting];
+        const topEmoji = this.toppingEmojis[this.currentTopping];
+
+        this.tiers.forEach(t => t.style.background = fColor);
+        this.frostings.forEach(f => f.style.background = frostColor);
+        this.toppingsEl.textContent = topEmoji;
+      }
+    }
+
+    /* =========================================================================
+       GAME 4 LOGIC: DRESS TO IMPRESS (Runway & Chibi System)
+       ========================================================================= */
+    class DressUpController {
+      constructor() {
+        this.currentAge = 'dewasa';      // 'dewasa' | 'anak'
+        this.currentGender = 'cewe';     // 'cewe' | 'cowo'
+        this.currentCategory = 'outfit'; // 'outfit' | 'hair' | 'face' | 'accessory' | 'handheld' | 'shoes' | 'skin'
+
+        this.avatarEl = document.getElementById('dti-avatar');
+        this.hairBackEl = document.getElementById('dti-hair-back');
+        this.hairFrontEl = document.getElementById('dti-hair-front');
+        this.faceContainer = document.getElementById('dti-face-container');
+        this.mouthEl = document.getElementById('dti-mouth');
+        this.outfitDisplay = document.getElementById('dti-outfit-display');
+        this.accDisplay = document.getElementById('dti-acc-display');
+        this.handheldDisplay = document.getElementById('dti-handheld-display');
+        this.shoeLeft = document.getElementById('dti-shoe-left');
+        this.shoeRight = document.getElementById('dti-shoe-right');
+        this.sockLeft = document.getElementById('dti-sock-left');
+        this.sockRight = document.getElementById('dti-sock-right');
+        this.flashEl = document.getElementById('dti-flash');
+        this.itemGrid = document.getElementById('dti-items');
+        this.runwayBtn = document.getElementById('btn-dti-runway');
+        this.randomBtn = document.getElementById('btn-dti-random');
+
+        // Stored current selections
+        this.currentSelection = {
+          outfit: null,
+          hair: null,
+          face: null,
+          accessory: null,
+          handheld: null,
+          shoes: null,
+          skin: null
+        };
+
+        this.initDatabase();
+        this.bindEvents();
+        this.updateProfileUI();
+        this.renderCategoryItems(this.currentCategory);
+        this.applyDefaults();
+      }
+
+      get profileKey() {
+        return `${this.currentAge}_${this.currentGender}`;
+      }
+
+      initDatabase() {
+        // Universal categories (Face, Accessories, Handheld, Skin)
+        this.universalItems = {
+          face: [
+            { id: 'f_diva', emoji: '💖', name: 'Diva Sparkle', class: 'face-diva', mouth: 'border-bottom: 2.5px solid #e11d48; width: 10px; height: 5px; background: #ff4d94; border-radius: 0 0 10px 10px;' },
+            { id: 'f_wink', emoji: '😉', name: 'Wink Manis', class: 'face-wink', mouth: 'border-bottom: 2px solid #e11d48; width: 9px; height: 4px; background: #fb7185; border-radius: 0 0 8px 8px;' },
+            { id: 'f_slay', emoji: '🌟', name: 'Runway Slay', class: 'face-slay', mouth: 'border-bottom: 3px solid #be185d; width: 9px; height: 4px; background: #f43f5e; border-radius: 0 0 8px 8px;' },
+            { id: 'f_happy', emoji: '😊', name: 'Senyum Ceria', class: 'face-happy', mouth: 'width: 11px; height: 6px; background: #e11d48; border-radius: 0 0 12px 12px;' },
+            { id: 'f_cool', emoji: '😎', name: 'Cool Smirk', class: 'face-cool', mouth: 'width: 8px; height: 3px; border-bottom: 2.5px solid #374151; transform: rotate(6deg) translateX(1px);' },
+            { id: 'f_puppy', emoji: '🥺', name: 'Mata Imut', class: 'face-puppy', mouth: 'width: 6px; height: 3px; border-bottom: 2px solid #e11d48; border-radius: 0 0 6px 6px;' }
+          ],
+          accessory: [
+            { id: 'a_crown', emoji: '👑', name: 'Mahkota Ratu' },
+            { id: 'a_shades', emoji: '🕶️', name: 'Kacamata VIP' },
+            { id: 'a_headset', emoji: '🎧', name: 'Headphone RGB' },
+            { id: 'a_ribbon', emoji: '🎀', name: 'Pita Jumbo' },
+            { id: 'a_wings', emoji: '🧚', name: 'Sayap Peri' },
+            { id: 'a_cap', emoji: '🧢', name: 'Topi Snapback' },
+            { id: 'a_magichat', emoji: '🎩', name: 'Topi Pesulap' },
+            { id: 'a_flower', emoji: '🌸', name: 'Bunga Sakura' },
+            { id: 'a_halo', emoji: '😇', name: 'Halo Cahaya' },
+            { id: 'a_horns', emoji: '😈', name: 'Tanduk Neon' }
+          ],
+          handheld: [
+            { id: 'h_bag', emoji: '👜', name: 'Tas Branded' },
+            { id: 'h_teddy', emoji: '🧸', name: 'Teddy Bear' },
+            { id: 'h_boba', emoji: '🧋', name: 'Boba Brown Sugar' },
+            { id: 'h_wand', emoji: '🪄', name: 'Tongkat Sihir' },
+            { id: 'h_cat', emoji: '🐱', name: 'Kucing Putih' },
+            { id: 'h_guitar', emoji: '🎸', name: 'Gitar Rocker' },
+            { id: 'h_skate', emoji: '🛹', name: 'Skateboard' },
+            { id: 'h_rose', emoji: '💐', name: 'Buket Mawar' },
+            { id: 'h_icecream', emoji: '🍦', name: 'Es Krim Pelangi' },
+            { id: 'h_mic', emoji: '🎤', name: 'Mikrofon Konser' }
+          ],
+          skin: [
+            { id: 's_ivory', emoji: '🤍', name: 'Putih Langsat', skin: '#fed7aa', shadow: '#e0a96d' },
+            { id: 's_peach', emoji: '🍑', name: 'Kuning Langsat', skin: '#fcd5b8', shadow: '#dca37e' },
+            { id: 's_tan', emoji: '🍯', name: 'Sawo Matang', skin: '#c68a4c', shadow: '#9a622a' },
+            { id: 's_mocha', emoji: '🍫', name: 'Cokelat Manis', skin: '#78350f', shadow: '#522204' }
+          ]
+        };
+
+        // Profile-specific collections (Outfit, Hair, Shoes)
+        this.profileItems = {
+          // 1. DEWASA CEWEK (Runway Glamour Woman)
+          dewasa_cewe: {
+            outfit: [
+              { id: 'dc_gown', emoji: '👗', name: 'Gaun Princess Pink', style: 'background: linear-gradient(180deg, #ff2e8c 0%, #ff75b9 45%, #f43f5e 100%); border-radius: 8px 8px 24px 24px; box-shadow: 0 4px 15px rgba(255, 46, 140, 0.4);' },
+              { id: 'dc_met', emoji: '✨', name: 'Met Gala Diamond', style: 'background: linear-gradient(135deg, #e2e8f0 0%, #ffffff 50%, #94a3b8 100%); border-radius: 6px 6px 26px 26px; box-shadow: 0 0 14px rgba(255,255,255,0.7);' },
+              { id: 'dc_y2k', emoji: '🖤', name: 'Cyber Y2K Crop', style: 'background: linear-gradient(180deg, #ff007f 0%, #1e1b4b 55%, #0f172a 100%); border-radius: 6px; box-shadow: 0 3px 10px rgba(255,0,127,0.3);' },
+              { id: 'dc_red', emoji: '🌹', name: 'Red Carpet Ruby', style: 'background: linear-gradient(180deg, #991b1b 0%, #dc2626 50%, #7f1d1d 100%); border-radius: 8px 8px 22px 22px; box-shadow: 0 4px 12px rgba(220,38,38,0.4);' },
+              { id: 'dc_suit', emoji: '💜', name: 'Power Blazer Lilac', style: 'background: linear-gradient(180deg, #c084fc 0%, #a855f7 60%, #7e22ce 100%); border-radius: 8px 8px 14px 14px;' },
+              { id: 'dc_fairy', emoji: '🧚', name: 'Butterfly Fairy', style: 'background: linear-gradient(180deg, #6ee7b7 0%, #f472b6 60%, #ec4899 100%); border-radius: 8px 8px 26px 26px;' }
+            ],
+            hair: [
+              { id: 'dc_h_blonde', emoji: '👱‍♀️', name: 'Blonde Waves', back: 'background: #facc15; border-radius: 24px 24px 18px 18px; height: 95px; width: 62px;', front: 'background: #facc15; border-radius: 20px 20px 4px 4px; height: 26px;' },
+              { id: 'dc_h_pony', emoji: '👩‍🦱', name: 'Raven Ponytail', back: 'background: #09090b; border-radius: 20px 24px 6px 20px; height: 105px; width: 56px; transform: rotate(-5deg);', front: 'background: #09090b; border-radius: 16px 16px 2px 2px; height: 22px;' },
+              { id: 'dc_h_pink', emoji: '💇‍♀️', name: 'Sakura Bangs', back: 'background: #ff2e8c; border-radius: 22px 22px 14px 14px; height: 92px; width: 60px;', front: 'background: #ff2e8c; border-radius: 18px 18px 4px 4px; height: 24px;' },
+              { id: 'dc_h_bob', emoji: '👩', name: 'Lilac Bob', back: 'background: #a855f7; border-radius: 22px 22px 10px 10px; height: 65px; width: 56px;', front: 'background: #a855f7; border-radius: 18px 18px 4px 4px; height: 24px;' },
+              { id: 'dc_h_brunette', emoji: '👩‍🦰', name: 'Chestnut Curls', back: 'background: #78350f; border-radius: 24px 24px 16px 16px; height: 90px; width: 62px;', front: 'background: #78350f; border-radius: 18px 18px 4px 4px; height: 24px;' },
+              { id: 'dc_h_silver', emoji: '👸', name: 'Silver Goddess', back: 'background: #e2e8f0; border-radius: 22px 22px 20px 20px; height: 98px; width: 64px;', front: 'background: #e2e8f0; border-radius: 18px 18px 4px 4px; height: 25px;' }
+            ],
+            shoes: [
+              { id: 'dc_s_pink', emoji: '👠', name: 'Stiletto Pink', color: '#ff2e8c' },
+              { id: 'dc_s_nude', emoji: '👡', name: 'Strappy Pastel', color: '#fbcfe8' },
+              { id: 'dc_s_boot', emoji: '👢', name: 'Combat Platform', color: '#18181b' },
+              { id: 'dc_s_glass', emoji: '✨', name: 'Diamond Glass', color: '#e0f2fe' }
+            ]
+          },
+
+          // 2. DEWASA COWOK (Runway Model Man)
+          dewasa_cowo: {
+            outfit: [
+              { id: 'dm_tux', emoji: '🤵', name: 'Royal Black Tuxedo', style: 'background: linear-gradient(180deg, #09090b 0%, #18181b 45%, #27272a 100%); border-radius: 8px 8px 10px 10px; border-top: 3px solid #ffffff;' },
+              { id: 'dm_cyber', emoji: '🧥', name: 'Cyber Techwear', style: 'background: linear-gradient(180deg, #0f172a 0%, #0284c7 70%, #0c4a6e 100%); border-radius: 8px; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);' },
+              { id: 'dm_idol', emoji: '👑', name: 'K-Pop Idol Uniform', style: 'background: linear-gradient(180deg, #1e3a8a 0%, #172554 100%); border-radius: 8px; border-left: 3px solid #fbbf24; border-right: 3px solid #fbbf24;' },
+              { id: 'dm_biker', emoji: '🎸', name: 'Rockstar Leather', style: 'background: linear-gradient(180deg, #18181b 0%, #27272a 60%, #3f3f46 100%); border-radius: 8px; border: 1px solid #71717a;' },
+              { id: 'dm_coat', emoji: '☕', name: 'K-Drama Camel Coat', style: 'background: linear-gradient(180deg, #d97706 0%, #b45309 60%, #78350f 100%); border-radius: 8px 8px 16px 16px;' },
+              { id: 'dm_linen', emoji: '🏖️', name: 'Resort Coral Linen', style: 'background: linear-gradient(180deg, #fb7185 0%, #f43f5e 60%, #e2e8f0 100%); border-radius: 8px;' }
+            ],
+            hair: [
+              { id: 'dm_h_wolf', emoji: '🧑‍🎤', name: 'Silver Wolfcut', back: 'background: #cbd5e1; border-radius: 18px 18px 10px 10px; height: 58px; width: 58px;', front: 'background: #cbd5e1; border-radius: 20px 10px 4px 8px; height: 26px;' },
+              { id: 'dm_h_gent', emoji: '👨', name: 'Gentleman Undercut', back: 'background: #271a0c; border-radius: 20px 20px 6px 6px; height: 48px; width: 54px;', front: 'background: #271a0c; border-radius: 20px 12px 2px 2px; height: 22px;' },
+              { id: 'dm_h_spiky', emoji: '🧑', name: 'Anime Jet Black', back: 'background: #09090b; border-radius: 16px 16px 8px 8px; height: 55px; width: 58px;', front: 'background: #09090b; border-radius: 16px 16px 3px 3px; height: 25px;' },
+              { id: 'dm_h_curtain', emoji: '👱‍♂️', name: 'Caramel Curtains', back: 'background: #b45309; border-radius: 20px 20px 8px 8px; height: 52px; width: 56px;', front: 'background: #b45309; border-radius: 18px 18px 4px 4px; height: 24px;' },
+              { id: 'dm_h_fade', emoji: '🧔', name: 'Modern Fade', back: 'background: #18181b; border-radius: 20px 20px 4px 4px; height: 45px; width: 52px;', front: 'background: #18181b; border-radius: 18px 18px 2px 2px; height: 18px;' },
+              { id: 'dm_h_cyan', emoji: '🧑‍🎤', name: 'Neon Cyan Punk', back: 'background: #06b6d4; border-radius: 16px 16px 6px 6px; height: 50px; width: 56px;', front: 'background: #06b6d4; border-radius: 18px 10px 3px 3px; height: 24px;' }
+            ],
+            shoes: [
+              { id: 'dm_s_oxford', emoji: '👞', name: 'Oxford Leather', color: '#1c1917' },
+              { id: 'dm_s_jordan', emoji: '👟', name: 'Street Sneakers', color: '#ef4444' },
+              { id: 'dm_s_boots', emoji: '👢', name: 'Tactical Boots', color: '#3f3f46' },
+              { id: 'dm_s_loafer', emoji: '🥿', name: 'White Loafers', color: '#f8fafc' }
+            ]
+          },
+
+          // 3. ANAK CEWEK (Cute Chibi Girl)
+          anak_cewe: {
+            outfit: [
+              { id: 'ac_lolita', emoji: '🌸', name: 'Lolita Princess', style: 'background: linear-gradient(180deg, #fbcfe8 0%, #f472b6 60%, #db2777 100%); border-radius: 12px 12px 20px 20px; box-shadow: 0 3px 8px rgba(244, 114, 182, 0.4);' },
+              { id: 'ac_sailor', emoji: '🎒', name: 'Sailor Kindergarten', style: 'background: linear-gradient(180deg, #ffffff 0%, #1e40af 50%, #1e3a8a 100%); border-radius: 8px 8px 16px 16px; border-top: 3px solid #ef4444;' },
+              { id: 'ac_bear', emoji: '🧸', name: 'Teddy Dungarees', style: 'background: linear-gradient(180deg, #fef08a 0%, #d97706 45%, #92400e 100%); border-radius: 10px 10px 14px 14px;' },
+              { id: 'ac_tutu', emoji: '🦄', name: 'Rainbow Unicorn Tutu', style: 'background: linear-gradient(135deg, #f472b6 0%, #a78bfa 35%, #38bdf8 70%, #facc15 100%); border-radius: 10px 10px 22px 22px;' },
+              { id: 'ac_strawberry', emoji: '🍓', name: 'Strawberry Sundress', style: 'background: linear-gradient(180deg, #f43f5e 0%, #e11d48 60%, #be185d 100%); border-radius: 10px 10px 18px 18px;' },
+              { id: 'ac_magical', emoji: '🧚', name: 'Magical Girl Robe', style: 'background: linear-gradient(180deg, #a7f3d0 0%, #c084fc 60%, #ec4899 100%); border-radius: 10px 10px 20px 20px;' }
+            ],
+            hair: [
+              { id: 'ac_h_twins', emoji: '👧', name: 'Twin Pigtails', back: 'background: #a16207; border-radius: 26px 26px 14px 14px; height: 75px; width: 74px;', front: 'background: #a16207; border-radius: 24px 24px 6px 6px; height: 26px;' },
+              { id: 'ac_h_bob', emoji: '👶', name: 'Cute Bob Bangs', back: 'background: #451a03; border-radius: 28px 28px 16px 16px; height: 64px; width: 68px;', front: 'background: #451a03; border-radius: 24px 24px 6px 6px; height: 25px;' },
+              { id: 'ac_h_buns', emoji: '👧', name: 'Double Space Buns', back: 'background: #ff2e8c; border-radius: 24px 24px 10px 10px; height: 60px; width: 76px;', front: 'background: #ff2e8c; border-radius: 24px 24px 4px 4px; height: 24px;' },
+              { id: 'ac_h_curls', emoji: '👱‍♀️', name: 'Princess Curls', back: 'background: #facc15; border-radius: 28px 28px 18px 18px; height: 78px; width: 72px;', front: 'background: #facc15; border-radius: 24px 24px 5px 5px; height: 25px;' },
+              { id: 'ac_h_braids', emoji: '👩‍🦰', name: 'Strawberry Braids', back: 'background: #dc2626; border-radius: 26px 26px 14px 14px; height: 74px; width: 70px;', front: 'background: #dc2626; border-radius: 24px 24px 4px 4px; height: 25px;' },
+              { id: 'ac_h_pony', emoji: '🎀', name: 'Lilac Side Pony', back: 'background: #c084fc; border-radius: 26px 26px 16px 16px; height: 70px; width: 70px;', front: 'background: #c084fc; border-radius: 24px 24px 5px 5px; height: 25px;' }
+            ],
+            shoes: [
+              { id: 'ac_s_mary', emoji: '🥿', name: 'Ribbon Mary Janes', color: '#0f172a', sock: '#ffffff' },
+              { id: 'ac_s_star', emoji: '👟', name: 'Light-up Sneakers', color: '#f472b6', sock: '#fde047' },
+              { id: 'ac_s_ballerina', emoji: '🩰', name: 'Ballerina Bow', color: '#c084fc' },
+              { id: 'ac_s_berry', emoji: '👢', name: 'Strawberry Boots', color: '#e11d48' }
+            ]
+          },
+
+          // 4. ANAK COWOK (Cute Chibi Boy)
+          anak_cowo: {
+            outfit: [
+              { id: 'am_dino', emoji: '🦖', name: 'Dino Spikes Hoodie', style: 'background: linear-gradient(180deg, #84cc16 0%, #65a30d 55%, #a16207 100%); border-radius: 12px 12px 14px 14px;' },
+              { id: 'am_sailor', emoji: '👑', name: 'Little Prince Suit', style: 'background: linear-gradient(180deg, #ffffff 0%, #1e3a8a 50%, #0f172a 100%); border-radius: 10px; border-top: 2px solid #eab308;' },
+              { id: 'am_varsity', emoji: '⚾', name: 'Varsity Letterman', style: 'background: linear-gradient(180deg, #ef4444 0%, #b91c1c 60%, #1e293b 100%); border-radius: 10px; border-left: 2px solid #ffffff;' },
+              { id: 'am_space', emoji: '🚀', name: 'Space Cadet Jumpsuit', style: 'background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 60%, #0284c7 100%); border-radius: 10px;' },
+              { id: 'am_bear', emoji: '🐻', name: 'Cozy Bear Romper', style: 'background: linear-gradient(180deg, #b45309 0%, #78350f 100%); border-radius: 12px;' },
+              { id: 'am_skater', emoji: '🛹', name: 'Skater Dungarees', style: 'background: linear-gradient(180deg, #facc15 0%, #2563eb 50%, #1d4ed8 100%); border-radius: 10px;' }
+            ],
+            hair: [
+              { id: 'am_h_bowl', emoji: '👦', name: 'Fluffy Bowl Cut', back: 'background: #3b220d; border-radius: 28px 28px 10px 10px; height: 56px; width: 66px;', front: 'background: #3b220d; border-radius: 24px 24px 6px 6px; height: 27px;' },
+              { id: 'am_h_spiky', emoji: '🧒', name: 'Spiky Explorer', back: 'background: #1c1917; border-radius: 24px 24px 8px 8px; height: 58px; width: 68px;', front: 'background: #1c1917; border-radius: 22px 22px 5px 5px; height: 26px;' },
+              { id: 'am_h_side', emoji: '👦', name: 'Little Gent Side-part', back: 'background: #b45309; border-radius: 26px 26px 8px 8px; height: 52px; width: 64px;', front: 'background: #b45309; border-radius: 24px 14px 4px 4px; height: 24px;' },
+              { id: 'am_h_cap', emoji: '🧢', name: 'Backwards Cap & Locks', back: 'background: #0284c7; border-radius: 28px 28px 8px 8px; height: 54px; width: 66px;', front: 'background: #0284c7; border-radius: 24px 24px 4px 4px; height: 22px;' },
+              { id: 'am_h_curly', emoji: '🧑', name: 'Curly Cutie', back: 'background: #78350f; border-radius: 28px 28px 12px 12px; height: 58px; width: 68px;', front: 'background: #78350f; border-radius: 24px 24px 6px 6px; height: 26px;' },
+              { id: 'am_h_blonde', emoji: '👱‍♂️', name: 'Sunny Adventurer', back: 'background: #facc15; border-radius: 26px 26px 10px 10px; height: 55px; width: 66px;', front: 'background: #facc15; border-radius: 24px 24px 5px 5px; height: 25px;' }
+            ],
+            shoes: [
+              { id: 'am_s_runners', emoji: '👟', name: 'Sport Runners', color: '#0284c7', sock: '#ffffff' },
+              { id: 'am_s_boots', emoji: '🥾', name: 'Dino Boots', color: '#65a30d' },
+              { id: 'am_s_canvas', emoji: '🛹', name: 'Skate Canvas', color: '#2563eb' },
+              { id: 'am_s_timber', emoji: '🥾', name: 'Mini Work Boots', color: '#b45309' }
+            ]
+          }
+        };
+      }
+
+      bindEvents() {
+        // Age selection buttons (Dewasa vs Anak)
+        document.querySelectorAll('[data-age]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.playPop();
+            document.querySelectorAll('[data-age]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentAge = btn.dataset.age;
+            this.handleProfileChange();
+          });
+        });
+
+        // Gender selection buttons (Cewek vs Cowok)
+        document.querySelectorAll('[data-gender]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.playPop();
+            document.querySelectorAll('[data-gender]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentGender = btn.dataset.gender;
+            this.handleProfileChange();
+          });
+        });
+
+        // Wardrobe Category tabs
+        document.querySelectorAll('.dti-cat-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.playPop();
+            document.querySelectorAll('.dti-cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentCategory = btn.dataset.cat;
+            this.renderCategoryItems(this.currentCategory);
+          });
+        });
+
+        // Randomizer Button
+        this.randomBtn.addEventListener('click', () => {
+          sound.playPop();
+          this.randomizeLook();
+        });
+
+        // Fashion Runway Show button
+        this.runwayBtn.addEventListener('click', () => {
+          this.triggerRunwayShow();
+        });
+      }
+
+      handleProfileChange() {
+        this.updateProfileUI();
+        this.applyDefaults();
+        this.renderCategoryItems(this.currentCategory);
+      }
+
+      updateProfileUI() {
+        // Remove old avatar profile classes
+        this.avatarEl.classList.remove('avatar-dewasa-cewe', 'avatar-dewasa-cowo', 'avatar-anak-cewe', 'avatar-anak-cowo');
+        // Add new active profile class
+        const cls = `avatar-${this.currentAge}-${this.currentGender}`;
+        this.avatarEl.classList.add(cls);
+      }
+
+      applyDefaults() {
+        const pKey = this.profileKey;
+        const pData = this.profileItems[pKey];
+
+        // Default Outfit
+        if (pData && pData.outfit && pData.outfit[0]) {
+          this.applyItem('outfit', pData.outfit[0]);
+        }
+        // Default Hair
+        if (pData && pData.hair && pData.hair[0]) {
+          this.applyItem('hair', pData.hair[0]);
+        }
+        // Default Face
+        const defaultFace = this.universalItems.face[0];
+        this.applyItem('face', defaultFace);
+
+        // Default Shoes
+        if (pData && pData.shoes && pData.shoes[0]) {
+          this.applyItem('shoes', pData.shoes[0]);
+        }
+        // Default Accessory
+        const defaultAcc = this.universalItems.accessory[0];
+        this.applyItem('accessory', defaultAcc);
+
+        // Default Handheld
+        const defaultHand = this.universalItems.handheld[0];
+        this.applyItem('handheld', defaultHand);
+
+        // Default Skin
+        const defaultSkin = this.universalItems.skin[0];
+        this.applyItem('skin', defaultSkin);
+      }
+
+      renderCategoryItems(cat) {
+        this.itemGrid.innerHTML = '';
+        let list = [];
+
+        if (this.universalItems[cat]) {
+          list = this.universalItems[cat];
+        } else {
+          const pKey = this.profileKey;
+          const pData = this.profileItems[pKey];
+          list = pData && pData[cat] ? pData[cat] : [];
+        }
+
+        const activeId = this.currentSelection[cat] ? this.currentSelection[cat].id : (list[0] ? list[0].id : null);
+
+        list.forEach((item) => {
+          const card = document.createElement('div');
+          const isActive = item.id === activeId;
+          card.className = `dti-item-card ${isActive ? 'active' : ''}`;
+          card.innerHTML = `
+            <span class="item-emoji">${item.emoji}</span>
+            <span class="item-name">${item.name}</span>
+          `;
+          card.addEventListener('click', () => {
+            sound.playPop();
+            this.itemGrid.querySelectorAll('.dti-item-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            this.applyItem(cat, item);
+          });
+          this.itemGrid.appendChild(card);
+        });
+      }
+
+      applyItem(cat, item) {
+        this.currentSelection[cat] = item;
+
+        if (cat === 'outfit') {
+          this.outfitDisplay.style.cssText = item.style;
+        } else if (cat === 'hair') {
+          if (item.back) this.hairBackEl.style.cssText = item.back;
+          if (item.front) this.hairFrontEl.style.cssText = item.front;
+        } else if (cat === 'face') {
+          // Reset face classes
+          this.faceContainer.className = `avatar-face ${item.class}`;
+          if (item.mouth) {
+            this.mouthEl.style.cssText = item.mouth;
+          }
+        } else if (cat === 'accessory') {
+          this.accDisplay.textContent = item.emoji;
+        } else if (cat === 'handheld') {
+          this.handheldDisplay.textContent = item.emoji;
+        } else if (cat === 'shoes') {
+          this.shoeLeft.style.background = item.color;
+          this.shoeRight.style.background = item.color;
+          const sockColor = item.sock || 'transparent';
+          const sockH = item.sock ? (this.currentAge === 'anak' ? '12px' : '18px') : '0';
+          this.sockLeft.style.background = sockColor;
+          this.sockLeft.style.height = sockH;
+          this.sockRight.style.background = sockColor;
+          this.sockRight.style.height = sockH;
+        } else if (cat === 'skin') {
+          document.documentElement.style.setProperty('--dti-skin', item.skin);
+          document.documentElement.style.setProperty('--dti-skin-shadow', item.shadow);
+        }
+      }
+
+      randomizeLook() {
+        const pKey = this.profileKey;
+        const pData = this.profileItems[pKey];
+
+        const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+        if (pData.outfit) this.applyItem('outfit', pickRandom(pData.outfit));
+        if (pData.hair) this.applyItem('hair', pickRandom(pData.hair));
+        this.applyItem('face', pickRandom(this.universalItems.face));
+        this.applyItem('accessory', pickRandom(this.universalItems.accessory));
+        this.applyItem('handheld', pickRandom(this.universalItems.handheld));
+        if (pData.shoes) this.applyItem('shoes', pickRandom(pData.shoes));
+        this.applyItem('skin', pickRandom(this.universalItems.skin));
+
+        // Re-render current category items to show active state
+        this.renderCategoryItems(this.currentCategory);
+
+        // Flash camera effect
+        this.flashEl.classList.remove('flash-active');
+        void this.flashEl.offsetWidth; // trigger reflow
+        this.flashEl.classList.add('flash-active');
+      }
+
+      triggerRunwayShow() {
+        sound.playWin();
+        particles.spawnCannons();
+
+        // Screen camera flash
+        this.flashEl.classList.remove('flash-active');
+        void this.flashEl.offsetWidth;
+        this.flashEl.classList.add('flash-active');
+
+        // Avatar runway strut
+        this.avatarEl.classList.remove('runway-strut');
+        void this.avatarEl.offsetWidth;
+        this.avatarEl.classList.add('runway-strut');
+
+        const outfitName = this.currentSelection.outfit ? this.currentSelection.outfit.name : 'Busana Impian';
+        const hairName = this.currentSelection.hair ? this.currentSelection.hair.name : 'Gaya Rambut';
+        const faceName = this.currentSelection.face ? this.currentSelection.face.name : 'Ekspresi';
+
+        let title = '👑 RUNWAY FASHION ICON!';
+        let desc = `Perpaduan busana "${outfitName}", rambut "${hairName}", dan ekspresi "${faceName}" berhasil memukau dewan juri runway! Nilai sempurna 5.0 / 5.0 ⭐⭐⭐⭐⭐!`;
+
+        if (this.currentAge === 'anak') {
+          title = this.currentGender === 'cewe' ? '💖 JUARA 1 PRINCESS CILIK!' : '🌟 JUARA 1 PANGERAN CILIK!';
+          desc = `Penampilan "${outfitName}" yang super menggemaskan dengan "${faceName}" bikin semua juri tepuk tangan gemas! 5.0 Bintang ⭐⭐⭐⭐⭐!`;
+        } else if (this.currentGender === 'cowo') {
+          title = '🔥 RUNWAY KING OF THE NIGHT!';
+          desc = `Karisma luar biasa dengan "${outfitName}" & ekspresi "${faceName}" bikin runway bergemuruh! 5.0 Bintang ⭐⭐⭐⭐⭐!`;
+        }
+
+        setTimeout(() => {
+          showGenericModal('👑', title, desc);
+        }, 1200);
+      }
+    }
+
+    /* =========================================================================
+       GAME 5 LOGIC: PURBLE PLACE (Lilac / Lavender Theme)
+       ========================================================================= */
+    class PurblePlaceController {
+      constructor() {
+        this.shapes = [
+          { name: 'Hati', emoji: '💜', radius: '18px 18px 8px 8px' },
+          { name: 'Kotak', emoji: '🔲', radius: '8px' },
+          { name: 'Bulat', emoji: '🟣', radius: '24px' }
+        ];
+        this.flavors = [
+          { name: 'Lilac Berry', color: '#c084fc' },
+          { name: 'Vanilla Lavender', color: '#e9d5ff' },
+          { name: 'Dark Grape', color: '#7e22ce' }
+        ];
+        this.toppings = ['🍒', '⭐', '🌸', '🍇'];
+
+        this.targetOrder = {};
+        this.buildState = { shapeIdx: 0, flavorIdx: 0, toppingIdx: 0 };
+
+        this.targetTextEl = document.getElementById('purble-target-text');
+        this.targetPreviewEl = document.getElementById('purble-target-preview');
+        this.buildCakeEl = document.getElementById('purble-build-cake');
+        this.buildEmojiEl = document.getElementById('purble-build-emoji');
+        this.deliverBtn = document.getElementById('btn-purble-deliver');
+
+        this.bindEvents();
+        this.generateNewOrder();
+        this.updateBuildVisuals();
+      }
+
+      bindEvents() {
+        document.querySelectorAll('.station-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.playPop();
+            const action = btn.dataset.action;
+            if (action === 'shape') {
+              this.buildState.shapeIdx = (this.buildState.shapeIdx + 1) % this.shapes.length;
+            } else if (action === 'flavor' || action === 'frosting') {
+              this.buildState.flavorIdx = (this.buildState.flavorIdx + 1) % this.flavors.length;
+            } else if (action === 'topping') {
+              this.buildState.toppingIdx = (this.buildState.toppingIdx + 1) % this.toppings.length;
+            }
+            this.updateBuildVisuals();
+          });
+        });
+
+        this.deliverBtn.addEventListener('click', () => {
+          const match =
+            this.buildState.shapeIdx === this.targetOrder.shapeIdx &&
+            this.buildState.flavorIdx === this.targetOrder.flavorIdx &&
+            this.buildState.toppingIdx === this.targetOrder.toppingIdx;
+
+          if (match) {
+            sound.playWin();
+            particles.spawnCannons();
+            showGenericModal('🎂', 'Pesanan Sempurna!', 'Pelanggan sangat senang dengan kue Purble Place pesanan mereka!', () => this.generateNewOrder());
+          } else {
+            sound.playTone(180, 'sawtooth', 0.25, 0.2);
+            showGenericModal('🤔', 'Kurang Pas!', 'Cek lagi bentuk, rasa, dan topping sesuai kartu pesanan ya!');
+          }
+        });
+      }
+
+      generateNewOrder() {
+        this.targetOrder = {
+          shapeIdx: Math.floor(Math.random() * this.shapes.length),
+          flavorIdx: Math.floor(Math.random() * this.flavors.length),
+          toppingIdx: Math.floor(Math.random() * this.toppings.length)
+        };
+        const s = this.shapes[this.targetOrder.shapeIdx];
+        const f = this.flavors[this.targetOrder.flavorIdx];
+        const t = this.toppings[this.targetOrder.toppingIdx];
+
+        this.targetTextEl.textContent = `Kue ${s.name} ${f.name} + ${t}`;
+        this.targetPreviewEl.textContent = t;
+        this.targetPreviewEl.style.background = f.color;
+      }
+
+      updateBuildVisuals() {
+        const s = this.shapes[this.buildState.shapeIdx];
+        const f = this.flavors[this.buildState.flavorIdx];
+        const t = this.toppings[this.buildState.toppingIdx];
+
+        this.buildCakeEl.style.background = f.color;
+        this.buildCakeEl.style.borderRadius = s.radius;
+        this.buildEmojiEl.textContent = t;
+      }
+    }
+
+    /* Modal Helper */
+    const genModal = document.getElementById('generic-modal');
+    const genModalEmoji = document.getElementById('gen-modal-emoji');
+    const genModalTitle = document.getElementById('gen-modal-title');
+    const genModalDesc = document.getElementById('gen-modal-desc');
+    const genModalOkBtn = document.getElementById('btn-gen-modal-ok');
+    let genModalCallback = null;
+
+    function showGenericModal(emoji, title, desc, callback = null) {
+      genModalEmoji.textContent = emoji;
+      genModalTitle.textContent = title;
+      genModalDesc.textContent = desc;
+      genModalCallback = callback;
+      genModal.classList.add('show');
+    }
+
+    genModalOkBtn.addEventListener('click', () => {
+      sound.playPop();
+      genModal.classList.remove('show');
+      if (genModalCallback) genModalCallback();
+    });
+
+    /* Initialize all games */
+    window.addEventListener('DOMContentLoaded', () => {
+      window.blockBlastGame = new BlockBlastController();
+      window.tictactoeGame = new TicTacToeController();
+      window.bakingGame = new BakingGameController();
+      window.dressUpGame = new DressUpController();
+      window.purbleGame = new PurblePlaceController();
+    });
+  </script>
+</body>
+</html>
