@@ -3,20 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Cute Arcade 🌸 - Block Blast, Tic Tac Toe, Baking, Dress Up & Purble Place</title>
-  <meta name="description" content="Koleksi game imut dan estetis: Block Blast, Tic Tac Toe Biru Muda, Baking Kue, Dress to Impress Pink, dan Purble Place Lilac dalam 1 file HTML!" />
+  <title>Sugarfall Realm 🌸 - TetriPop Bloom, Celestial XO, Cloud Confection, Atelier Chic & Lilac Memory Cake</title>
+  <meta name="description" content="Koleksi game arcade pastel dreamy: TetriPop Bloom, Celestial XO, Cloud Confection, Atelier Chic, dan Lilac Memory Cake dalam 1 file!" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Firebase App & Services (v9 Compat CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <style>
     :root {
       --font-main: 'Fredoka', 'Outfit', sans-serif;
       --font-title: 'Outfit', sans-serif;
-      /* Pink Theme Default */
-      --theme-bg: #140713;
-      --theme-glow: rgba(255, 77, 148, 0.3);
+
+      /* Colorful Pastel Theme Palette */
+      --pastel-pink: #ffd6e4;
+      --pastel-lavender: #f0e6ff;
+      --pastel-sky: #e0f2fe;
+      --pastel-mint: #dcfce7;
+      --pastel-peach: #ffedd5;
+      --pastel-lemon: #fef9c3;
       --theme-accent: #ff4d94;
+      --theme-glow: rgba(255, 182, 218, 0.45);
+
+      --text-dark: #2f1738;
+      --text-muted: #74577f;
+      --card-bg: rgba(255, 255, 255, 0.76);
+      --card-border: rgba(255, 255, 255, 0.95);
+      --card-shadow: 0 10px 30px rgba(180, 140, 190, 0.16);
     }
 
     * {
@@ -30,9 +48,11 @@
 
     body {
       min-height: 100vh;
-      background: #0f0510;
+      background: linear-gradient(135deg, #ffe5ec 0%, #f4e8ff 25%, #e0f2fe 50%, #e6fffa 75%, #fef3c7 100%);
+      background-size: 300% 300%;
+      animation: pastelShift 20s ease infinite;
       font-family: var(--font-main);
-      color: #fff;
+      color: var(--text-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -41,18 +61,25 @@
       position: relative;
     }
 
-    /* Ambient background glows */
+    @keyframes pastelShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Ambient background pastel glows */
     .ambient-glow {
       position: fixed;
       top: -120px;
       left: 50%;
       transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, var(--theme-glow) 0%, transparent 70%);
+      width: 750px;
+      height: 750px;
+      background: radial-gradient(circle, rgba(255, 182, 218, 0.55) 0%, rgba(186, 230, 253, 0.35) 45%, transparent 70%);
       pointer-events: none;
       z-index: 0;
       transition: background 0.5s ease;
+      filter: blur(50px);
     }
 
     /* Global Particle Canvas */
@@ -93,68 +120,129 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      gap: 6px;
     }
 
     .brand-title {
       font-family: var(--font-title);
       font-weight: 900;
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #fff 15%, #ff80bf 60%, #ff2e8c 100%);
+      background: linear-gradient(135deg, #ff2e8c 0%, #a855f7 50%, #0284c7 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
       gap: 6px;
-      filter: drop-shadow(0 2px 8px rgba(255, 46, 140, 0.4));
+      filter: drop-shadow(0 2px 6px rgba(255, 46, 140, 0.25));
     }
 
     .header-actions {
       display: flex;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
     }
 
-    .btn-more-games {
-      background: linear-gradient(135deg, #ff2e8c, #9d4edd);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: #fff;
+    /* User Profile Pill Button */
+    .user-pill-btn {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1.5px solid rgba(255, 182, 218, 0.7);
+      border-radius: 20px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-family: var(--font-title);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #3b2344;
+      box-shadow: 0 2px 8px rgba(255, 182, 218, 0.35);
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-pill-btn:hover {
+      transform: scale(1.04);
+      background: #ffffff;
+      border-color: #ff4d94;
+    }
+    .user-avatar-badge {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    /* Leaderboard Button */
+    .btn-leaderboard {
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      color: #431f00;
       font-family: var(--font-title);
       font-weight: 800;
-      font-size: 0.85rem;
-      padding: 6px 14px;
+      font-size: 0.8rem;
+      padding: 6px 10px;
       border-radius: 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 14px rgba(157, 78, 221, 0.4);
+      gap: 4px;
+      box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3);
       transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-leaderboard:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 14px rgba(255, 165, 0, 0.45);
+    }
+
+    .btn-more-games {
+      background: linear-gradient(135deg, #ff2e8c, #9d4edd);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 4px 12px rgba(157, 78, 221, 0.35);
+      transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn-more-games:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 18px rgba(255, 46, 140, 0.6);
+      box-shadow: 0 6px 18px rgba(255, 46, 140, 0.5);
     }
 
     .icon-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffd6ec;
-      width: 36px;
-      height: 36px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      color: #6a4073;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
       transition: all 0.2s ease;
       backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(180, 140, 190, 0.15);
     }
 
     .icon-btn:hover {
       transform: scale(1.08);
-      background: rgba(255, 255, 255, 0.18);
+      background: #ffffff;
+      color: #ff2e8c;
     }
 
     /* Game Navigation Pill Carousel */
@@ -170,22 +258,25 @@
 
     .tab-pill {
       flex: 0 0 auto;
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 0.8rem;
+      padding: 6px 13px;
+      border-radius: 18px;
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #e0d0e8;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
+      color: #62436d;
       display: flex;
       align-items: center;
       gap: 5px;
+      box-shadow: 0 3px 10px rgba(180, 140, 190, 0.12);
+      backdrop-filter: blur(8px);
       transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
     }
 
     .tab-pill:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.95);
+      color: #2b1832;
       transform: translateY(-1px);
     }
 
@@ -196,32 +287,32 @@
 
     .tab-pill.tab-blockblast.active {
       background: linear-gradient(135deg, #ff2e8c, #ff75b9);
-      border-color: #ff99d6;
-      box-shadow: 0 3px 12px rgba(255, 46, 140, 0.5);
+      border-color: #ffb3db;
+      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.45);
     }
 
     .tab-pill.tab-tictactoe.active {
       background: linear-gradient(135deg, #0284c7, #38bdf8);
-      border-color: #7dd3fc;
-      box-shadow: 0 3px 12px rgba(56, 189, 248, 0.5);
+      border-color: #bae6fd;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.45);
     }
 
     .tab-pill.tab-baking.active {
       background: linear-gradient(135deg, #ea580c, #fb923c);
       border-color: #fed7aa;
-      box-shadow: 0 3px 12px rgba(251, 146, 60, 0.5);
+      box-shadow: 0 4px 14px rgba(251, 146, 60, 0.45);
     }
 
     .tab-pill.tab-dressup.active {
       background: linear-gradient(135deg, #db2777, #f472b6);
       border-color: #fbcfe8;
-      box-shadow: 0 3px 12px rgba(244, 114, 182, 0.5);
+      box-shadow: 0 4px 14px rgba(244, 114, 182, 0.45);
     }
 
     .tab-pill.tab-purble.active {
       background: linear-gradient(135deg, #7e22ce, #c084fc);
       border-color: #e9d5ff;
-      box-shadow: 0 3px 12px rgba(192, 132, 252, 0.5);
+      box-shadow: 0 4px 14px rgba(192, 132, 252, 0.45);
     }
 
     /* Game Screens Container */
@@ -254,20 +345,20 @@
     }
 
     .score-card {
-      background: rgba(255, 105, 180, 0.08);
-      border: 1px solid rgba(255, 150, 205, 0.25);
+      background: rgba(255, 255, 255, 0.78);
+      border: 1.5px solid rgba(255, 182, 218, 0.7);
       border-radius: 18px;
       padding: 10px 14px;
       text-align: center;
       backdrop-filter: blur(12px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 8px 24px rgba(220, 160, 190, 0.2);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       position: relative;
     }
 
     .score-card.scoring-pulse {
       animation: scorePulse 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-      box-shadow: 0 0 28px rgba(255, 77, 148, 0.9), inset 0 0 12px rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 28px rgba(255, 77, 148, 0.7), inset 0 0 12px rgba(255, 255, 255, 0.8);
       border-color: #ff99d6;
     }
 
@@ -288,20 +379,20 @@
 
     .score-label {
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      color: #ffb3d9;
+      color: #d81b60;
       margin-bottom: 2px;
     }
 
     .score-value {
       font-family: var(--font-title);
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #fff;
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #2e1633;
       line-height: 1.1;
-      text-shadow: 0 2px 10px rgba(255, 77, 148, 0.5);
+      text-shadow: 0 2px 8px rgba(255, 77, 148, 0.25);
     }
 
     .combo-pill {
@@ -324,21 +415,22 @@
       background: linear-gradient(90deg, #ff2e8c, #ff70b8);
       padding: 4px 18px;
       border-radius: 20px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.85rem;
-      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.5);
+      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.4);
       animation: pulseGlow 1.2s infinite alternate;
+      color: #fff;
     }
 
     .board-wrapper {
       width: 100%;
       aspect-ratio: 1 / 1;
       max-width: 400px;
-      background: rgba(36, 12, 31, 0.85);
-      border: 2px solid rgba(255, 150, 205, 0.3);
+      background: rgba(43, 16, 38, 0.92);
+      border: 3px solid rgba(255, 182, 218, 0.8);
       border-radius: 22px;
       padding: 8px;
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45), 0 0 25px rgba(255, 77, 148, 0.15);
+      box-shadow: 0 14px 35px rgba(180, 120, 160, 0.35), 0 0 25px rgba(255, 77, 148, 0.2);
       backdrop-filter: blur(14px);
       position: relative;
     }
@@ -353,9 +445,9 @@
     }
 
     .cell {
-      background: rgba(62, 21, 52, 0.55);
+      background: rgba(62, 21, 52, 0.65);
       border-radius: 8px;
-      border: 1px solid rgba(255, 120, 185, 0.18);
+      border: 1px solid rgba(255, 120, 185, 0.25);
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
       position: relative;
       display: flex;
@@ -404,8 +496,8 @@
       width: 100%;
       max-width: 420px;
       margin-top: 14px;
-      background: rgba(255, 105, 180, 0.08);
-      border: 1px solid rgba(255, 150, 205, 0.25);
+      background: rgba(255, 255, 255, 0.75);
+      border: 1.5px solid rgba(255, 182, 218, 0.7);
       border-radius: 22px;
       padding: 10px 6px;
       display: flex;
@@ -413,6 +505,7 @@
       align-items: center;
       min-height: 120px;
       backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(220, 160, 190, 0.2);
     }
 
     .piece-slot {
@@ -475,7 +568,7 @@
       justify-content: center;
       transform: translate(-50%, -50%);
       animation: floatScore 0.9s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
-      filter: drop-shadow(0 4px 14px rgba(255, 46, 140, 0.8));
+      filter: drop-shadow(0 4px 14px rgba(255, 46, 140, 0.6));
     }
     .floating-score .score-title {
       font-size: 0.82rem;
@@ -506,41 +599,44 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .ttt-header {
       width: 100%;
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(255, 255, 255, 0.78);
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
       border-radius: 20px;
       padding: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.2);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.15);
+      backdrop-filter: blur(8px);
     }
 
     .ttt-mode-select {
       display: flex;
-      background: rgba(2, 132, 199, 0.25);
+      background: rgba(224, 242, 254, 0.75);
       border-radius: 25px;
       padding: 3px;
       gap: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
     .ttt-mode-btn {
       background: transparent;
       border: none;
-      color: #bae6fd;
+      color: #0369a1;
       font-family: var(--font-title);
       font-weight: 700;
-      font-size: 0.8rem;
-      padding: 6px 14px;
+      font-size: 0.78rem;
+      padding: 6px 12px;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .ttt-mode-btn.active {
@@ -558,55 +654,91 @@
     }
 
     .ttt-score-box {
-      background: rgba(2, 132, 199, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      background: rgba(240, 249, 255, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.25);
       border-radius: 12px;
       padding: 6px;
     }
 
     .ttt-score-label {
       font-size: 0.7rem;
-      color: #7dd3fc;
-      font-weight: 600;
+      color: #0284c7;
+      font-weight: 700;
     }
 
     .ttt-score-val {
       font-family: var(--font-title);
       font-size: 1.3rem;
       font-weight: 800;
-      color: #fff;
+      color: #0c4a6e;
     }
 
     .ttt-status-pill {
       font-family: var(--font-title);
       font-weight: 800;
       font-size: 0.95rem;
-      color: #e0f2fe;
-      background: rgba(56, 189, 248, 0.25);
-      border: 1px solid #38bdf8;
+      color: #0369a1;
+      background: rgba(224, 242, 254, 0.95);
+      border: 1.5px solid #38bdf8;
       padding: 6px 20px;
       border-radius: 20px;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+    }
+
+    /* Online Multiplayer Room Panel */
+    .ttt-online-panel {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1.5px solid #7dd3fc;
+      border-radius: 18px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.15);
+      animation: fadeInView 0.25s ease;
+    }
+    .ttt-room-status-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0369a1;
+    }
+    .room-code-tag {
+      font-family: var(--font-title);
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: 2px;
+      color: #0284c7;
+      background: #e0f2fe;
+      padding: 2px 8px;
+      border-radius: 8px;
     }
 
     .ttt-board {
       width: 100%;
       max-width: 340px;
       aspect-ratio: 1 / 1;
-      background: rgba(8, 47, 73, 0.8);
-      border: 2px solid rgba(56, 189, 248, 0.45);
+      background: linear-gradient(145deg, #e0f2fe, #f0f9ff);
+      border: 3px solid #7dd3fc;
       border-radius: 24px;
       padding: 12px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 10px;
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.25);
+      box-shadow: 0 14px 35px rgba(56, 189, 248, 0.2), 0 0 30px rgba(186, 230, 253, 0.35);
     }
 
     .ttt-cell {
-      background: rgba(14, 165, 233, 0.18);
-      border: 2px solid rgba(56, 189, 248, 0.3);
+      background: #ffffff;
+      border: 2px solid #bae6fd;
       border-radius: 18px;
       display: flex;
       align-items: center;
@@ -616,30 +748,31 @@
       font-weight: 900;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 10px rgba(56, 189, 248, 0.12);
     }
 
     .ttt-cell:hover:empty {
-      background: rgba(56, 189, 248, 0.35);
+      background: #f0f9ff;
+      border-color: #38bdf8;
       transform: scale(0.96);
     }
 
     .ttt-cell.mark-x {
-      color: #38bdf8;
-      text-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+      color: #0284c7;
+      text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
       animation: popMark 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
     .ttt-cell.mark-o {
-      color: #f472b6;
-      text-shadow: 0 0 20px rgba(244, 114, 182, 0.8);
+      color: #db2777;
+      text-shadow: 0 0 15px rgba(244, 114, 182, 0.6);
       animation: popMark 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
     .ttt-cell.win-highlight {
-      background: rgba(56, 189, 248, 0.55) !important;
-      border-color: #fff !important;
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.9) !important;
+      background: #bae6fd !important;
+      border-color: #0284c7 !important;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.8) !important;
       animation: pulseWin 0.7s infinite alternate;
     }
 
@@ -1771,8 +1904,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(14, 4, 14, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(35, 18, 40, 0.5);
+      backdrop-filter: blur(8px);
       z-index: 300;
       display: flex;
       align-items: center;
@@ -1785,14 +1918,17 @@
     .modal-backdrop.show { opacity: 1; pointer-events: auto; }
 
     .modal-card {
-      background: linear-gradient(145deg, #240c20, #160614);
-      border: 2px solid #ff70b8;
+      background: linear-gradient(160deg, #ffffff 0%, #fff0f6 55%, #f4e8ff 100%);
+      border: 2px solid #ffb6d9;
       border-radius: 28px;
       width: 100%;
-      max-width: 380px;
-      padding: 26px 20px;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px 20px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 77, 148, 0.4);
+      color: #3b2344;
+      box-shadow: 0 20px 50px rgba(130, 80, 140, 0.25), 0 0 35px rgba(255, 182, 218, 0.4);
     }
 
     .game-grid-drawer {
@@ -1803,8 +1939,8 @@
     }
 
     .game-card-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1.5px solid rgba(255, 182, 218, 0.6);
       border-radius: 18px;
       padding: 14px 10px;
       cursor: pointer;
@@ -1812,15 +1948,165 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      color: #fff;
+      color: #3b2344;
+      box-shadow: 0 4px 12px rgba(180, 140, 190, 0.1);
       transition: all 0.2s ease;
     }
     .game-card-btn:hover {
       transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 6px 18px rgba(255, 77, 148, 0.4);
+      box-shadow: 0 8px 20px rgba(255, 77, 148, 0.25);
+      background: #ffffff;
     }
     .game-card-btn .game-icon { font-size: 2.2rem; }
-    .game-card-btn .game-name { font-weight: 800; font-size: 0.85rem; }
+    .game-card-btn .game-name { font-weight: 800; font-size: 0.85rem; color: #2e1633; }
+
+    /* Auth & Login Gate Styles */
+    .auth-card {
+      max-width: 440px;
+    }
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+    .avatar-opt {
+      font-size: 1.8rem;
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid #ecd5fa;
+      border-radius: 16px;
+      padding: 8px 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-opt:hover {
+      transform: scale(1.1);
+      background: #ffffff;
+      border-color: #ff4d94;
+    }
+    .avatar-opt.selected {
+      border-color: #ff4d94;
+      background: #ffe4f0;
+      box-shadow: 0 0 14px rgba(255, 77, 148, 0.45);
+      transform: scale(1.08);
+    }
+    .auth-tabs {
+      display: flex;
+      background: rgba(235, 215, 245, 0.6);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 7px 6px;
+      border-radius: 16px;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: #6a4c73;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .auth-tab-btn.active {
+      background: #ffffff;
+      color: #ff2e8c;
+      box-shadow: 0 2px 8px rgba(255, 46, 140, 0.25);
+    }
+    .auth-input {
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid #ffccd9;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-family: var(--font-main);
+      font-size: 0.92rem;
+      color: #3b2344;
+      margin-bottom: 10px;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    .auth-input:focus {
+      border-color: #ff4d94;
+      box-shadow: 0 0 10px rgba(255, 77, 148, 0.25);
+    }
+
+    /* Leaderboard Modal Styles */
+    .leaderboard-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .lb-tab-btn {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #eed9fa;
+      border-radius: 14px;
+      padding: 6px 12px;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: #6a4c73;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .lb-tab-btn.active {
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #3a1a00;
+      border-color: #ffc107;
+      box-shadow: 0 2px 8px rgba(255, 193, 7, 0.35);
+    }
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid #ffd1e4;
+      border-radius: 16px;
+      padding: 8px 12px;
+      transition: transform 0.15s ease;
+    }
+    .lb-row:hover { transform: translateX(3px); }
+    .lb-row.my-rank {
+      background: linear-gradient(90deg, #fff0f6, #f3e8ff);
+      border: 2px solid #ff4d94;
+      box-shadow: 0 3px 12px rgba(255, 77, 148, 0.2);
+    }
+    .lb-rank {
+      font-family: var(--font-title);
+      font-weight: 900;
+      font-size: 1.15rem;
+      width: 28px;
+      text-align: center;
+    }
+    .lb-avatar { font-size: 1.4rem; }
+    .lb-info { flex: 1; text-align: left; }
+    .lb-name { font-weight: 700; font-size: 0.88rem; color: #2d1832; }
+    .lb-date { font-size: 0.7rem; color: #8e7396; }
+    .lb-score {
+      font-family: var(--font-title);
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #d81b60;
+    }
 
     /* Screen shake */
     .shake { animation: shakeScreen 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
@@ -1868,11 +2154,18 @@
     <header>
       <div class="header-top">
         <div class="brand-title" id="main-brand-title">
-          <span>💖</span> Pink Blast!
+          <span>🌸</span> Sugarfall Realm
         </div>
         <div class="header-actions">
+          <button id="btn-user-profile" class="user-pill-btn" title="Profil Pemain">
+            <span class="user-avatar-badge" id="header-user-avatar">🐱</span>
+            <span id="header-user-name">Pemain</span>
+          </button>
+          <button id="btn-leaderboard" class="btn-leaderboard" title="Papan Peringkat Global">
+            🏆 Peringkat
+          </button>
           <button id="btn-more-games" class="btn-more-games">
-            🎮 More Games
+            🎮 Games
           </button>
           <button id="btn-sound-global" class="icon-btn" title="Suara">🔊</button>
         </div>
@@ -1880,11 +2173,11 @@
 
       <!-- Quick Switcher Tabs -->
       <div class="game-tabs">
-        <div class="tab-pill tab-blockblast active" data-game="blockblast">💖 Block Blast</div>
-        <div class="tab-pill tab-tictactoe" data-game="tictactoe">🩵 Tic Tac Toe</div>
-        <div class="tab-pill tab-baking" data-game="baking">🧁 Cake Bakery</div>
-        <div class="tab-pill tab-dressup" data-game="dressup">👗 Dress Up</div>
-        <div class="tab-pill tab-purble" data-game="purble">💜 Purble Place</div>
+        <div class="tab-pill tab-blockblast active" data-game="blockblast">🌸 TetriPop Bloom</div>
+        <div class="tab-pill tab-tictactoe" data-game="tictactoe">🩵 Celestial XO</div>
+        <div class="tab-pill tab-baking" data-game="baking">🧁 Cloud Confection</div>
+        <div class="tab-pill tab-dressup" data-game="dressup">🎀 Atelier Chic</div>
+        <div class="tab-pill tab-purble" data-game="purble">💜 Lilac Memory</div>
       </div>
     </header>
 
@@ -1927,6 +2220,7 @@
           <div class="ttt-mode-select">
             <button class="ttt-mode-btn active" id="ttt-mode-ai">vs Robot 🤖</button>
             <button class="ttt-mode-btn" id="ttt-mode-2p">2 Pemain 👥</button>
+            <button class="ttt-mode-btn" id="ttt-mode-online">Online Room 🌐</button>
           </div>
           <div class="ttt-scoreboard">
             <div class="ttt-score-box">
@@ -1943,6 +2237,48 @@
             </div>
           </div>
           <div class="ttt-status-pill" id="ttt-status">Giliran: Pemain X 🩵</div>
+        </div>
+
+        <!-- Online Multiplayer Room Panel -->
+        <div class="ttt-online-panel" id="ttt-online-panel" style="display: none;">
+          <div class="ttt-room-status-badge" id="ttt-online-status-bar">
+            <span>🌐 Status: <span id="ttt-online-status-text">Pilih atau Buat Room</span></span>
+            <span class="room-code-tag" id="ttt-current-room-tag" style="display:none;">---</span>
+          </div>
+
+          <!-- Room Action Buttons -->
+          <div id="ttt-room-actions-setup">
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-action" id="btn-create-room" style="flex: 1; font-size: 0.8rem; padding: 8px 10px; background: linear-gradient(135deg, #0284c7, #38bdf8);">
+                ✨ Buat Room
+              </button>
+              <button class="btn-action" id="btn-join-room-toggle" style="flex: 1; font-size: 0.8rem; padding: 8px 10px; background: linear-gradient(135deg, #a855f7, #c084fc);">
+                👥 Gabung Room
+              </button>
+            </div>
+            
+            <div id="ttt-join-input-group" style="display:none; margin-top: 8px; gap: 6px;">
+              <input type="text" id="input-room-code" placeholder="KODE ROOM (4-6 HURUF)" maxlength="6" style="flex: 1; text-transform: uppercase; font-family: var(--font-title); font-weight: 800; font-size: 0.92rem; letter-spacing: 2px; text-align: center; border-radius: 12px; border: 1.5px solid #38bdf8; padding: 6px 10px; outline: none;" />
+              <button class="btn-action" id="btn-confirm-join-room" style="font-size: 0.8rem; padding: 8px 14px; background: linear-gradient(135deg, #0284c7, #38bdf8); white-space: nowrap;">
+                Masuk! 🚀
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Room Info -->
+          <div id="ttt-room-active-info" style="display:none; flex-direction: column; gap: 8px;">
+            <div style="font-size: 0.82rem; color: #0369a1; text-align: center;" id="ttt-room-players-desc">
+              Anda: <strong>Pemain X (🩵)</strong> | Menunggu lawan masuk...
+            </div>
+            <div style="display:flex; justify-content: space-between; align-items: center; gap: 8px;">
+              <button id="btn-copy-room-code" style="font-size: 0.75rem; background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 10px; padding: 5px 10px; cursor: pointer; color: #0284c7; font-weight: 700;">
+                📋 Salin Kode Room
+              </button>
+              <button id="btn-leave-room" style="font-size: 0.75rem; background: #ffe4e6; border: 1px solid #fda4af; border-radius: 10px; padding: 5px 10px; cursor: pointer; color: #e11d48; font-weight: 700;">
+                🚪 Keluar Room
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="ttt-board" id="ttt-board">
@@ -2211,24 +2547,24 @@
 
       <div class="game-grid-drawer">
         <div class="game-card-btn" data-select="blockblast" style="border-color: #ff4d94;">
-          <div class="game-icon">💖</div>
-          <div class="game-name">Block Blast</div>
+          <div class="game-icon">🌸</div>
+          <div class="game-name">TetriPop Bloom</div>
         </div>
         <div class="game-card-btn" data-select="tictactoe" style="border-color: #38bdf8;">
           <div class="game-icon">🩵</div>
-          <div class="game-name">Tic Tac Toe</div>
+          <div class="game-name">Celestial XO</div>
         </div>
         <div class="game-card-btn" data-select="baking" style="border-color: #fb923c;">
           <div class="game-icon">🧁</div>
-          <div class="game-name">Cake Bakery</div>
+          <div class="game-name">Cloud Confection</div>
         </div>
         <div class="game-card-btn" data-select="dressup" style="border-color: #f472b6;">
-          <div class="game-icon">👗</div>
-          <div class="game-name">Dress to Impress</div>
+          <div class="game-icon">🎀</div>
+          <div class="game-name">Atelier Chic</div>
         </div>
         <div class="game-card-btn" data-select="purble" style="border-color: #c084fc; grid-column: span 2;">
           <div class="game-icon">💜</div>
-          <div class="game-name">Purble Place Cake Shop</div>
+          <div class="game-name">Lilac Memory Cake</div>
         </div>
       </div>
 
@@ -2244,9 +2580,720 @@
       <p id="gen-modal-desc" style="font-size: 0.95rem; color: #ffd6ec; margin-bottom: 18px;">Penampilan memukau!</p>
       <button class="btn-action" id="btn-gen-modal-ok" style="width: 100%;">Lanjut 🌸</button>
     </div>
+  <!-- =========================================================================
+       MODAL 1: AUTH & SIGN IN GATE (MUNCUL SEBELUM MAIN)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-auth-gate">
+    <div class="modal-card auth-card">
+      <div style="font-size: 2.8rem; margin-bottom: 2px; animation: bounce 1.8s infinite;">🌸</div>
+      <h2 style="font-family: var(--font-title); font-weight: 900; font-size: 1.6rem; color: #d81b60; margin-bottom: 2px;">
+        Sugarfall Realm
+      </h2>
+      <p style="font-size: 0.82rem; color: #7c6882; margin-bottom: 12px;">
+        Pilih avatar imut & masuk akun untuk simpan skormu ke Cloud!
+      </p>
+
+      <!-- Avatar Selector -->
+      <div style="font-size: 0.78rem; font-weight: 800; color: #ff2e8c; text-align: left; margin-bottom: 2px;">
+        PILIH AVATAR KAMU:
+      </div>
+      <div class="avatar-grid" id="auth-avatar-grid">
+        <button type="button" class="avatar-opt selected" data-avatar="🐱">🐱</button>
+        <button type="button" class="avatar-opt" data-avatar="🐰">🐰</button>
+        <button type="button" class="avatar-opt" data-avatar="🐻">🐻</button>
+        <button type="button" class="avatar-opt" data-avatar="🌸">🌸</button>
+        <button type="button" class="avatar-opt" data-avatar="🦄">🦄</button>
+        <button type="button" class="avatar-opt" data-avatar="🧁">🧁</button>
+        <button type="button" class="avatar-opt" data-avatar="🦊">🦊</button>
+        <button type="button" class="avatar-opt" data-avatar="🐼">🐼</button>
+      </div>
+
+      <!-- Auth Mode Tabs -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tab-guest-mode">Tamu Cepat 🚀</button>
+        <button type="button" class="auth-tab-btn" id="tab-login-mode">Masuk Akun 🔐</button>
+        <button type="button" class="auth-tab-btn" id="tab-register-mode">Daftar Baru ✨</button>
+      </div>
+
+      <!-- Form Inputs -->
+      <div id="auth-inputs-wrap">
+        <input type="text" id="auth-nickname" class="auth-input" placeholder="Nama / Nickname (misal: KittyGamer)" maxlength="14" />
+        
+        <div id="auth-credentials-wrap" style="display: none;">
+          <input type="email" id="auth-email" class="auth-input" placeholder="Alamat Email (opsional)" />
+          <input type="password" id="auth-password" class="auth-input" placeholder="Kata Sandi (min 6 karakter)" />
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+        <button class="btn-action" id="btn-submit-auth" style="width: 100%;">
+          <span>Mulai Bermain! 🎮✨</span>
+        </button>
+      </div>
+
+      <div id="auth-feedback-msg" style="margin-top: 8px; font-size: 0.78rem; font-weight: 700; color: #d81b60; min-height: 18px;"></div>
+
+      <div style="font-size: 0.72rem; color: #9c88a4; margin-top: 4px;">
+        ☁️ Didukung Firebase Cloud Sync & Leaderboard Realtime
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: USER PROFILE & SETTINGS
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-user-profile">
+    <div class="modal-card">
+      <div id="prof-avatar-display" style="font-size: 3.5rem; margin-bottom: 2px;">🐱</div>
+      <h2 id="prof-name-display" style="font-family: var(--font-title); font-weight: 900; font-size: 1.5rem; color: #d81b60; margin-bottom: 2px;">
+        Pemain Imut
+      </h2>
+      <p id="prof-type-display" style="font-size: 0.8rem; color: #7c6882; margin-bottom: 14px;">Akun Tamu (Tersimpan di Cloud)</p>
+
+      <!-- Stats Summary -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
+        <div style="background: rgba(255, 230, 240, 0.75); border-radius: 14px; padding: 8px; border: 1px solid #ffccd9;">
+          <div style="font-size: 0.7rem; color: #ff2e8c; font-weight: 800;">🌸 TETRIPOP BEST</div>
+          <div id="prof-stat-bb" style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 900; color: #2d1832;">0</div>
+        </div>
+        <div style="background: rgba(224, 242, 254, 0.75); border-radius: 14px; padding: 8px; border: 1px solid #bae6fd;">
+          <div style="font-size: 0.7rem; color: #0284c7; font-weight: 800;">🩵 CELESTIAL XO WINS</div>
+          <div id="prof-stat-ttt" style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 900; color: #2d1832;">0</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-action" id="btn-open-firebase-config" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #451a03; font-size: 0.85rem; padding: 8px;">
+          ⚙️ Atur Konfigurasi Firebase Sendiri
+        </button>
+        <button class="btn-action" id="btn-switch-account" style="background: linear-gradient(135deg, #a855f7, #c084fc); font-size: 0.85rem; padding: 8px;">
+          🔄 Ganti Akun / Avatar
+        </button>
+        <button class="btn-action" id="btn-close-profile" style="background: rgba(200, 180, 210, 0.35); color: #4a3055; font-size: 0.85rem; padding: 8px;">
+          Tutup
+        </button>
+      </div>
+
+      <!-- Collapsible Firebase Config Form -->
+      <div id="firebase-config-form" style="display:none; margin-top: 14px; text-align: left; background: #fff; border-radius: 14px; padding: 12px; border: 1.5px solid #fbbf24;">
+        <div style="font-size: 0.82rem; font-weight: 800; color: #b45309; margin-bottom: 6px;">
+          🔥 Hubungkan Firebase Project Pribadi:
+        </div>
+        <p style="font-size: 0.72rem; color: #78350f; margin-bottom: 8px;">
+          Salin dan tempel JSON config dari Firebase Console (Project Settings > Web App):
+        </p>
+        <textarea id="input-firebase-json" rows="4" style="width: 100%; font-family: monospace; font-size: 0.72rem; border-radius: 8px; border: 1px solid #fcd34d; padding: 6px; box-sizing: border-box;" placeholder='{ "apiKey": "AIza...", "projectId": "...", "databaseURL": "..." }'></textarea>
+        <div style="display: flex; gap: 6px; margin-top: 6px;">
+          <button id="btn-save-firebase-config" style="flex:1; background: #f59e0b; color: #fff; border:none; border-radius:8px; padding:6px; font-weight:700; cursor:pointer; font-size:0.75rem;">
+            Simpan & Sambungkan
+          </button>
+          <button id="btn-reset-firebase-config" style="background: #f3f4f6; color: #4b5563; border:1px solid #d1d5db; border-radius:8px; padding:6px; font-weight:700; cursor:pointer; font-size:0.75rem;">
+            Reset Default
+          </button>
+        </div>
+        <div id="firebase-config-msg" style="font-size: 0.72rem; font-weight: 700; color: #059669; margin-top: 6px; min-height: 14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: GLOBAL LEADERBOARD
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-leaderboard">
+    <div class="modal-card" style="max-width: 440px;">
+      <div style="font-size: 2.8rem; margin-bottom: 2px;">🏆</div>
+      <h2 style="font-family: var(--font-title); font-weight: 900; font-size: 1.6rem; color: #b45309; margin-bottom: 2px;">
+        Papan Peringkat Global
+      </h2>
+      <p style="font-size: 0.8rem; color: #7c6882; margin-bottom: 12px;">
+        Pemain terbaik Sugarfall Realm di seluruh dunia! ☁️
+      </p>
+
+      <!-- Leaderboard Tabs -->
+      <div class="leaderboard-tabs">
+        <button class="lb-tab-btn active" data-lb="blockblast">🌸 TetriPop Bloom</button>
+        <button class="lb-tab-btn" data-lb="tictactoe">🩵 Celestial XO</button>
+        <button class="lb-tab-btn" data-lb="purble">💜 Lilac Memory</button>
+      </div>
+
+      <!-- Leaderboard List -->
+      <div class="leaderboard-list" id="leaderboard-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 14px;">
+        <button class="btn-action" id="btn-refresh-leaderboard" style="flex: 1; font-size: 0.82rem; background: linear-gradient(135deg, #0284c7, #38bdf8);">
+          🔄 Refresh
+        </button>
+        <button class="btn-action" id="btn-close-leaderboard" style="flex: 1; font-size: 0.82rem; background: rgba(200, 180, 210, 0.35); color: #4a3055;">
+          Tutup
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
+    /* =========================================================================
+       FIREBASE ARCADE SERVICE (AUTH, LEADERBOARD & REALTIME MULTIPLAYER)
+       ========================================================================= */
+    class FirebaseArcadeService {
+      constructor() {
+        this.app = null;
+        this.auth = null;
+        this.db = null;
+        this.rtdb = null;
+        this.currentUser = null;
+        this.isLiveFirebase = false;
+        this.broadcastChannel = null;
+
+        try {
+          if (typeof BroadcastChannel !== 'undefined') {
+            this.broadcastChannel = new BroadcastChannel('cute_arcade_channel');
+          }
+        } catch(e) {}
+
+        this.init();
+      }
+
+      init() {
+        const savedConfig = localStorage.getItem('cute_arcade_firebase_config');
+        let config = null;
+        if (savedConfig) {
+          try { config = JSON.parse(savedConfig); } catch(e){}
+        }
+
+        if (!config) {
+          config = {
+            apiKey: "AIzaSyCuteArcadeDemoPlaceholderKey123",
+            authDomain: "cute-arcade-demo.firebaseapp.com",
+            databaseURL: "https://cute-arcade-demo-default-rtdb.firebaseio.com",
+            projectId: "cute-arcade-demo",
+            storageBucket: "cute-arcade-demo.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef123456"
+          };
+        }
+
+        this.config = config;
+
+        if (typeof firebase !== 'undefined' && firebase.initializeApp) {
+          try {
+            if (!firebase.apps || !firebase.apps.length) {
+              this.app = firebase.initializeApp(config);
+            } else {
+              this.app = firebase.app();
+            }
+            if (firebase.auth) this.auth = firebase.auth();
+            if (firebase.firestore) this.db = firebase.firestore();
+            if (firebase.database) this.rtdb = firebase.database();
+
+            if (config.apiKey && !config.apiKey.includes('Placeholder')) {
+              this.isLiveFirebase = true;
+            }
+          } catch(err) {
+            console.warn('Firebase init (simulated cloud fallback active):', err.message);
+            this.isLiveFirebase = false;
+          }
+        }
+
+        // Restore active user session from local storage
+        const savedUser = localStorage.getItem('cute_arcade_user');
+        if (savedUser) {
+          try { this.currentUser = JSON.parse(savedUser); } catch(e){}
+        }
+      }
+
+      saveCustomConfig(newConfigJson) {
+        localStorage.setItem('cute_arcade_firebase_config', JSON.stringify(newConfigJson));
+        location.reload();
+      }
+
+      resetConfig() {
+        localStorage.removeItem('cute_arcade_firebase_config');
+        location.reload();
+      }
+
+      async loginOrRegister(email, password, isRegister, displayName, avatar) {
+        if (this.isLiveFirebase && this.auth) {
+          try {
+            let userCred;
+            if (isRegister) {
+              userCred = await this.auth.createUserWithEmailAndPassword(email, password);
+              await userCred.user.updateProfile({ displayName: `${avatar} ${displayName}` });
+            } else {
+              userCred = await this.auth.signInWithEmailAndPassword(email, password);
+            }
+            const user = {
+              uid: userCred.user.uid,
+              email: userCred.user.email,
+              name: displayName || userCred.user.displayName || 'Pemain Imut',
+              avatar: avatar || '🐱',
+              isGuest: false
+            };
+            this.currentUser = user;
+            localStorage.setItem('cute_arcade_user', JSON.stringify(user));
+            return { success: true, user };
+          } catch(err) {
+            return { success: false, message: err.message };
+          }
+        } else {
+          // Cloud Simulated Auth
+          const user = {
+            uid: 'usr_' + Math.random().toString(36).substring(2, 9),
+            email: email || '',
+            name: displayName || (isRegister ? 'Pemain Baru' : 'Pemain Imut'),
+            avatar: avatar || '🐱',
+            isGuest: false
+          };
+          this.currentUser = user;
+          localStorage.setItem('cute_arcade_user', JSON.stringify(user));
+          return { success: true, user };
+        }
+      }
+
+      loginAsGuest(displayName, avatar) {
+        const cuteNames = ['MatchaCat', 'StarBunny', 'BobaQueen', 'CottonCandy', 'PeachPuff', 'MilkyPanda'];
+        const name = (displayName && displayName.trim().length > 0) ? displayName.trim() : cuteNames[Math.floor(Math.random() * cuteNames.length)];
+        const user = {
+          uid: 'gst_' + Math.random().toString(36).substring(2, 9),
+          name: name,
+          avatar: avatar || '🐱',
+          isGuest: true
+        };
+        this.currentUser = user;
+        localStorage.setItem('cute_arcade_user', JSON.stringify(user));
+        return user;
+      }
+
+      logout() {
+        this.currentUser = null;
+        localStorage.removeItem('cute_arcade_user');
+        if (this.auth && this.isLiveFirebase) {
+          try { this.auth.signOut(); } catch(e){}
+        }
+      }
+
+      async saveHighScore(game, score) {
+        if (!this.currentUser) return;
+        const record = {
+          uid: this.currentUser.uid,
+          name: this.currentUser.name,
+          avatar: this.currentUser.avatar,
+          score: score,
+          timestamp: Date.now()
+        };
+
+        const key = `cute_arcade_lb_${game}`;
+        let lb = [];
+        try {
+          const stored = localStorage.getItem(key);
+          if (stored) lb = JSON.parse(stored);
+        } catch(e){}
+
+        const existingIdx = lb.findIndex(item => item.uid === record.uid || item.name === record.name);
+        if (existingIdx >= 0) {
+          if (score > lb[existingIdx].score) {
+            lb[existingIdx] = record;
+          }
+        } else {
+          lb.push(record);
+        }
+        lb.sort((a, b) => b.score - a.score);
+        localStorage.setItem(key, JSON.stringify(lb.slice(0, 30)));
+
+        if (this.isLiveFirebase && this.db) {
+          try {
+            await this.db.collection('leaderboards').doc(game).collection('scores').doc(this.currentUser.uid).set(record, { merge: true });
+          } catch(err) {
+            console.warn('Firestore write:', err);
+          }
+        }
+      }
+
+      async getLeaderboard(game) {
+        if (this.isLiveFirebase && this.db) {
+          try {
+            const snap = await this.db.collection('leaderboards').doc(game).collection('scores').orderBy('score', 'desc').limit(10).get();
+            if (!snap.empty) {
+              const list = [];
+              snap.forEach(doc => list.push(doc.data()));
+              return list;
+            }
+          } catch(e) {
+            console.warn('Firestore get:', e);
+          }
+        }
+
+        const key = `cute_arcade_lb_${game}`;
+        let localLb = [];
+        try {
+          const stored = localStorage.getItem(key);
+          if (stored) localLb = JSON.parse(stored);
+        } catch(e){}
+
+        const starterData = {
+          blockblast: [
+            { name: "SakuraQueen", avatar: "🌸", score: 4850, date: "Hari ini" },
+            { name: "MatchaCat", avatar: "🐱", score: 4210, date: "Hari ini" },
+            { name: "StarBunny", avatar: "🐰", score: 3950, date: "Kemarin" },
+            { name: "BobaKing", avatar: "🐻", score: 3420, date: "2 hari lalu" },
+            { name: "CottonCloud", avatar: "🦄", score: 2890, date: "3 hari lalu" }
+          ],
+          tictactoe: [
+            { name: "TicTacPro", avatar: "🩵", score: 38, date: "Hari ini" },
+            { name: "SweetBunny", avatar: "🐰", score: 29, date: "Kemarin" },
+            { name: "GalaxyKitty", avatar: "🐱", score: 22, date: "2 hari lalu" },
+            { name: "PandaMaster", avatar: "🐼", score: 17, date: "3 hari lalu" }
+          ],
+          purble: [
+            { name: "MasterChef", avatar: "🧁", score: 24, date: "Hari ini" },
+            { name: "ChocoBerry", avatar: "🐻", score: 19, date: "Kemarin" },
+            { name: "KawaiiBaker", avatar: "🌸", score: 15, date: "2 hari lalu" }
+          ]
+        };
+
+        let combined = [...(starterData[game] || [])];
+        localLb.forEach(loc => {
+          const exists = combined.find(c => c.name === loc.name);
+          if (!exists) combined.push(loc);
+          else if (loc.score > exists.score) exists.score = loc.score;
+        });
+
+        combined.sort((a, b) => b.score - a.score);
+        return combined.slice(0, 10);
+      }
+
+      // Multiplayer Room Realtime events
+      sendRoomEvent(event) {
+        if (this.broadcastChannel) {
+          this.broadcastChannel.postMessage(event);
+        }
+        if (this.isLiveFirebase && this.rtdb && event.roomCode) {
+          try {
+            this.rtdb.ref(`ttt_rooms/${event.roomCode}`).set(event);
+          } catch(e) {}
+        }
+      }
+
+      listenRoomEvents(roomCode, callback) {
+        if (this.broadcastChannel) {
+          this.broadcastChannel.onmessage = (e) => {
+            if (e.data && e.data.roomCode === roomCode) {
+              callback(e.data);
+            }
+          };
+        }
+        if (this.isLiveFirebase && this.rtdb) {
+          try {
+            const ref = this.rtdb.ref(`ttt_rooms/${roomCode}`);
+            ref.on('value', (snapshot) => {
+              const val = snapshot.val();
+              if (val) callback(val);
+            });
+          } catch(e) {}
+        }
+      }
+    }
+
+    /* =========================================================================
+       AUTH GATE & PROFILE CONTROLLER
+       ========================================================================= */
+    class AuthGateController {
+      constructor(firebaseService) {
+        this.fb = firebaseService;
+        this.selectedAvatar = '🐱';
+        this.mode = 'guest'; // 'guest', 'login', 'register'
+
+        // Elements
+        this.modal = document.getElementById('modal-auth-gate');
+        this.avatarBtns = document.querySelectorAll('#auth-avatar-grid .avatar-opt');
+        this.tabGuest = document.getElementById('tab-guest-mode');
+        this.tabLogin = document.getElementById('tab-login-mode');
+        this.tabRegister = document.getElementById('tab-register-mode');
+        this.inputNickname = document.getElementById('auth-nickname');
+        this.inputEmail = document.getElementById('auth-email');
+        this.inputPassword = document.getElementById('auth-password');
+        this.credentialsWrap = document.getElementById('auth-credentials-wrap');
+        this.btnSubmit = document.getElementById('btn-submit-auth');
+        this.feedbackMsg = document.getElementById('auth-feedback-msg');
+
+        // Header and Profile Elements
+        this.headerUserAvatar = document.getElementById('header-user-avatar');
+        this.headerUserName = document.getElementById('header-user-name');
+        this.btnUserProfile = document.getElementById('btn-user-profile');
+        this.profileModal = document.getElementById('modal-user-profile');
+        this.profAvatarDisplay = document.getElementById('prof-avatar-display');
+        this.profNameDisplay = document.getElementById('prof-name-display');
+        this.profTypeDisplay = document.getElementById('prof-type-display');
+        this.profStatBb = document.getElementById('prof-stat-bb');
+        this.profStatTtt = document.getElementById('prof-stat-ttt');
+        this.btnSwitchAccount = document.getElementById('btn-switch-account');
+        this.btnCloseProfile = document.getElementById('btn-close-profile');
+        this.btnOpenFbConfig = document.getElementById('btn-open-firebase-config');
+        this.fbConfigForm = document.getElementById('firebase-config-form');
+        this.inputFbJson = document.getElementById('input-firebase-json');
+        this.btnSaveFbConfig = document.getElementById('btn-save-firebase-config');
+        this.btnResetFbConfig = document.getElementById('btn-reset-firebase-config');
+        this.fbConfigMsg = document.getElementById('firebase-config-msg');
+
+        this.bindEvents();
+        this.updateHeaderProfile();
+      }
+
+      bindEvents() {
+        // Avatar selection
+        this.avatarBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.playPop();
+            this.avatarBtns.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            this.selectedAvatar = btn.dataset.avatar;
+          });
+        });
+
+        // Tabs
+        this.tabGuest.addEventListener('click', () => this.setMode('guest'));
+        this.tabLogin.addEventListener('click', () => this.setMode('login'));
+        this.tabRegister.addEventListener('click', () => this.setMode('register'));
+
+        // Submit
+        this.btnSubmit.addEventListener('click', () => this.handleSubmit());
+
+        // Header Profile click
+        this.btnUserProfile.addEventListener('click', () => {
+          sound.playPop();
+          this.openProfileModal();
+        });
+
+        this.btnCloseProfile.addEventListener('click', () => {
+          sound.playPop();
+          this.profileModal.classList.remove('show');
+        });
+
+        this.btnSwitchAccount.addEventListener('click', () => {
+          sound.playPop();
+          this.profileModal.classList.remove('show');
+          this.open();
+        });
+
+        // Firebase Config toggling
+        this.btnOpenFbConfig.addEventListener('click', () => {
+          sound.playPop();
+          const isHidden = this.fbConfigForm.style.display === 'none';
+          this.fbConfigForm.style.display = isHidden ? 'block' : 'none';
+          if (isHidden && this.fb.config) {
+            this.inputFbJson.value = JSON.stringify(this.fb.config, null, 2);
+          }
+        });
+
+        this.btnSaveFbConfig.addEventListener('click', () => {
+          sound.playChime();
+          try {
+            const parsed = JSON.parse(this.inputFbJson.value.trim());
+            this.fbConfigMsg.textContent = 'Menyimpan konfigurasi...';
+            this.fb.saveCustomConfig(parsed);
+          } catch(err) {
+            this.fbConfigMsg.style.color = '#ef4444';
+            this.fbConfigMsg.textContent = 'Format JSON tidak valid!';
+          }
+        });
+
+        this.btnResetFbConfig.addEventListener('click', () => {
+          sound.playPop();
+          this.fb.resetConfig();
+        });
+      }
+
+      setMode(mode) {
+        sound.playPop();
+        this.mode = mode;
+        this.tabGuest.classList.toggle('active', mode === 'guest');
+        this.tabLogin.classList.toggle('active', mode === 'login');
+        this.tabRegister.classList.toggle('active', mode === 'register');
+
+        if (mode === 'guest') {
+          this.credentialsWrap.style.display = 'none';
+          this.inputNickname.style.display = 'block';
+          this.btnSubmit.innerHTML = '<span>Mulai Bermain Sebagai Tamu! 🚀</span>';
+        } else if (mode === 'login') {
+          this.credentialsWrap.style.display = 'block';
+          this.inputNickname.style.display = 'none';
+          this.btnSubmit.innerHTML = '<span>Masuk Akun 🔐</span>';
+        } else {
+          this.credentialsWrap.style.display = 'block';
+          this.inputNickname.style.display = 'block';
+          this.btnSubmit.innerHTML = '<span>Daftar Akun Baru ✨</span>';
+        }
+        this.feedbackMsg.textContent = '';
+      }
+
+      async handleSubmit() {
+        sound.playPop();
+        const nickname = this.inputNickname.value.trim();
+        const email = this.inputEmail.value.trim();
+        const pass = this.inputPassword.value.trim();
+
+        if (this.mode === 'guest') {
+          this.fb.loginAsGuest(nickname, this.selectedAvatar);
+          this.onLoginSuccess();
+          return;
+        }
+
+        if (!email || !pass) {
+          this.feedbackMsg.textContent = 'Isi email dan kata sandi dengan benar!';
+          return;
+        }
+
+        if (pass.length < 6) {
+          this.feedbackMsg.textContent = 'Kata sandi minimal 6 karakter!';
+          return;
+        }
+
+        this.feedbackMsg.textContent = 'Menghubungkan ke Cloud...';
+        const res = await this.fb.loginOrRegister(email, pass, this.mode === 'register', nickname, this.selectedAvatar);
+        if (res.success) {
+          this.onLoginSuccess();
+        } else {
+          this.feedbackMsg.textContent = res.message || 'Gagal masuk akun!';
+        }
+      }
+
+      onLoginSuccess() {
+        sound.playWin();
+        particles.spawnCannons();
+        this.modal.classList.remove('show');
+        this.updateHeaderProfile();
+      }
+
+      open() {
+        this.modal.classList.add('show');
+        if (this.fb.currentUser) {
+          this.inputNickname.value = this.fb.currentUser.name || '';
+          this.selectedAvatar = this.fb.currentUser.avatar || '🐱';
+          this.avatarBtns.forEach(b => b.classList.toggle('selected', b.dataset.avatar === this.selectedAvatar));
+        }
+      }
+
+      updateHeaderProfile() {
+        const u = this.fb.currentUser;
+        if (u) {
+          this.headerUserAvatar.textContent = u.avatar || '🐱';
+          this.headerUserName.textContent = u.name || 'Pemain';
+        } else {
+          this.headerUserAvatar.textContent = '🌸';
+          this.headerUserName.textContent = 'Masuk';
+        }
+      }
+
+      openProfileModal() {
+        const u = this.fb.currentUser;
+        if (!u) {
+          this.open();
+          return;
+        }
+        this.profAvatarDisplay.textContent = u.avatar || '🐱';
+        this.profNameDisplay.textContent = u.name || 'Pemain Imut';
+        this.profTypeDisplay.textContent = u.isGuest ? 'Akun Tamu (Tersimpan Lokal)' : (u.email ? `Akun: ${u.email}` : 'Akun Terdaftar');
+
+        const bbBest = localStorage.getItem('pink_blast_highscore') || '0';
+        this.profStatBb.textContent = bbBest;
+
+        const tttWins = localStorage.getItem('cute_arcade_ttt_wins') || '0';
+        this.profStatTtt.textContent = tttWins;
+
+        this.profileModal.classList.add('show');
+      }
+    }
+
+    /* =========================================================================
+       GLOBAL LEADERBOARD CONTROLLER
+       ========================================================================= */
+    class LeaderboardController {
+      constructor(firebaseService) {
+        this.fb = firebaseService;
+        this.activeGame = 'blockblast';
+
+        this.modal = document.getElementById('modal-leaderboard');
+        this.btnLeaderboard = document.getElementById('btn-leaderboard');
+        this.btnClose = document.getElementById('btn-close-leaderboard');
+        this.btnRefresh = document.getElementById('btn-refresh-leaderboard');
+        this.tabs = document.querySelectorAll('.lb-tab-btn');
+        this.listEl = document.getElementById('leaderboard-list-container');
+
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        this.btnLeaderboard.addEventListener('click', () => {
+          sound.playPop();
+          this.open();
+        });
+
+        this.btnClose.addEventListener('click', () => {
+          sound.playPop();
+          this.modal.classList.remove('show');
+        });
+
+        this.btnRefresh.addEventListener('click', () => {
+          sound.playPop();
+          this.loadLeaderboard();
+        });
+
+        this.tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            sound.playPop();
+            this.tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            this.activeGame = tab.dataset.lb;
+            this.loadLeaderboard();
+          });
+        });
+      }
+
+      open() {
+        this.modal.classList.add('show');
+        this.loadLeaderboard();
+      }
+
+      async loadLeaderboard() {
+        this.listEl.innerHTML = '<div style="text-align: center; color: #8e7396; padding: 18px;">Memuat data papan peringkat... ☁️</div>';
+        const data = await this.fb.getLeaderboard(this.activeGame);
+        this.renderList(data);
+      }
+
+      renderList(data) {
+        this.listEl.innerHTML = '';
+        if (!data || data.length === 0) {
+          this.listEl.innerHTML = '<div style="text-align: center; color: #8e7396; padding: 18px;">Belum ada skor tercatat. Jadilah yang pertama! 🌸</div>';
+          return;
+        }
+
+        const medals = ['🥇', '🥈', '🥉'];
+        const currentName = this.fb.currentUser ? this.fb.currentUser.name : '';
+
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'lb-row';
+          if (currentName && item.name === currentName) {
+            row.classList.add('my-rank');
+          }
+
+          const rankIcon = idx < 3 ? medals[idx] : `#${idx + 1}`;
+          row.innerHTML = `
+            <div class="lb-rank">${rankIcon}</div>
+            <div class="lb-avatar">${item.avatar || '🐱'}</div>
+            <div class="lb-info">
+              <div class="lb-name">${item.name}</div>
+              <div class="lb-date">${item.date || 'Terkini'}</div>
+            </div>
+            <div class="lb-score">${item.score.toLocaleString()}</div>
+          `;
+          this.listEl.appendChild(row);
+        });
+      }
+    }
+
     /* =========================================================================
        AUDIO SYNTHESIZER
        ========================================================================= */
@@ -2435,11 +3482,11 @@
     const gameCards = document.querySelectorAll('.game-card-btn');
 
     const THEMES = {
-      blockblast: { title: '<span>💖</span> Pink Blast!', glow: 'rgba(255, 77, 148, 0.35)' },
-      tictactoe:  { title: '<span>🩵</span> Tic Tac Toe', glow: 'rgba(56, 189, 248, 0.35)' },
-      baking:     { title: '<span>🧁</span> Cake Bakery', glow: 'rgba(251, 146, 60, 0.35)' },
-      dressup:    { title: '<span>👗</span> Dress to Impress', glow: 'rgba(244, 114, 182, 0.35)' },
-      purble:     { title: '<span>💜</span> Purble Place', glow: 'rgba(192, 132, 252, 0.35)' }
+      blockblast: { title: '<span>🌸</span> TetriPop Bloom', glow: 'rgba(255, 77, 148, 0.4)' },
+      tictactoe:  { title: '<span>🩵</span> Celestial XO', glow: 'rgba(56, 189, 248, 0.4)' },
+      baking:     { title: '<span>🧁</span> Cloud Confection', glow: 'rgba(251, 146, 60, 0.4)' },
+      dressup:    { title: '<span>🎀</span> Atelier Chic', glow: 'rgba(244, 114, 182, 0.4)' },
+      purble:     { title: '<span>💜</span> Lilac Memory Cake', glow: 'rgba(192, 132, 252, 0.4)' }
     };
 
     function switchGame(gameKey) {
@@ -2881,6 +3928,9 @@
         if (!anyCanFit) {
           setTimeout(() => {
             sound.playTone(200, 'sawtooth', 0.4, 0.2);
+            if (window.firebaseArcade) {
+              window.firebaseArcade.saveHighScore('blockblast', this.score);
+            }
             showGenericModal('💔', 'Game Over!', `Skor Anda: ${this.score}`, () => this.startNewGame());
           }, 500);
         }
@@ -2905,6 +3955,9 @@
               this.highScore = targetScore;
               this.highScoreEl.textContent = this.highScore;
               localStorage.setItem('pink_blast_highscore', this.highScore);
+              if (window.firebaseArcade) {
+                window.firebaseArcade.saveHighScore('blockblast', this.highScore);
+              }
             }
           }
         };
@@ -2947,9 +4000,17 @@
         this.board = Array(9).fill(null);
         this.currentPlayer = 'X'; // X is Blue, O is Pink
         this.isAI = true;
+        this.isOnline = false;
         this.gameOver = false;
         this.scores = { X: 0, O: 0, draw: 0 };
 
+        // Online state
+        this.onlineRoomCode = null;
+        this.myRole = 'X'; // Host is 'X', Guest is 'O'
+        this.roomActive = false;
+        this.opponentName = null;
+
+        // Elements
         this.cells = document.querySelectorAll('.ttt-cell');
         this.statusEl = document.getElementById('ttt-status');
         this.scoreXEl = document.getElementById('ttt-score-x');
@@ -2957,9 +4018,26 @@
         this.scoreDrawEl = document.getElementById('ttt-score-draw');
         this.modeAIBtn = document.getElementById('ttt-mode-ai');
         this.mode2PBtn = document.getElementById('ttt-mode-2p');
+        this.modeOnlineBtn = document.getElementById('ttt-mode-online');
         this.resetBtn = document.getElementById('btn-ttt-reset');
 
+        // Online elements
+        this.onlinePanel = document.getElementById('ttt-online-panel');
+        this.onlineStatusText = document.getElementById('ttt-online-status-text');
+        this.currentRoomTag = document.getElementById('ttt-current-room-tag');
+        this.roomActionsSetup = document.getElementById('ttt-room-actions-setup');
+        this.btnCreateRoom = document.getElementById('btn-create-room');
+        this.btnJoinRoomToggle = document.getElementById('btn-join-room-toggle');
+        this.joinInputGroup = document.getElementById('ttt-join-input-group');
+        this.inputRoomCode = document.getElementById('input-room-code');
+        this.btnConfirmJoin = document.getElementById('btn-confirm-join-room');
+        this.roomActiveInfo = document.getElementById('ttt-room-active-info');
+        this.roomPlayersDesc = document.getElementById('ttt-room-players-desc');
+        this.btnCopyRoomCode = document.getElementById('btn-copy-room-code');
+        this.btnLeaveRoom = document.getElementById('btn-leave-room');
+
         this.bindEvents();
+        this.bindOnlineEvents();
         this.resetRound();
       }
 
@@ -2973,31 +4051,197 @@
 
         this.modeAIBtn.addEventListener('click', () => {
           sound.playPop();
-          this.isAI = true;
-          this.modeAIBtn.classList.add('active');
-          this.mode2PBtn.classList.remove('active');
-          this.resetRound();
+          this.setMode('ai');
         });
 
         this.mode2PBtn.addEventListener('click', () => {
           sound.playPop();
-          this.isAI = false;
-          this.mode2PBtn.classList.add('active');
-          this.modeAIBtn.classList.remove('active');
-          this.resetRound();
+          this.setMode('2p');
+        });
+
+        this.modeOnlineBtn.addEventListener('click', () => {
+          sound.playPop();
+          this.setMode('online');
         });
 
         this.resetBtn.addEventListener('click', () => {
           sound.playPop();
+          if (this.isOnline && this.roomActive) {
+            window.firebaseArcade.sendRoomEvent({
+              type: 'reset',
+              roomCode: this.onlineRoomCode
+            });
+          }
           this.resetRound();
         });
       }
 
-      resetRound() {
+      setMode(mode) {
+        this.modeAIBtn.classList.toggle('active', mode === 'ai');
+        this.mode2PBtn.classList.toggle('active', mode === '2p');
+        this.modeOnlineBtn.classList.toggle('active', mode === 'online');
+
+        if (mode === 'ai') {
+          this.isAI = true;
+          this.isOnline = false;
+          this.onlinePanel.style.display = 'none';
+          this.resetRound();
+        } else if (mode === '2p') {
+          this.isAI = false;
+          this.isOnline = false;
+          this.onlinePanel.style.display = 'none';
+          this.resetRound();
+        } else {
+          this.isAI = false;
+          this.isOnline = true;
+          this.onlinePanel.style.display = 'flex';
+          this.resetRound();
+          this.statusEl.textContent = 'Mode Online: Buat atau Gabung Room';
+        }
+      }
+
+      bindOnlineEvents() {
+        this.btnCreateRoom.addEventListener('click', () => this.handleCreateRoom());
+
+        this.btnJoinRoomToggle.addEventListener('click', () => {
+          sound.playPop();
+          const isShown = this.joinInputGroup.style.display === 'flex';
+          this.joinInputGroup.style.display = isShown ? 'none' : 'flex';
+        });
+
+        this.btnConfirmJoin.addEventListener('click', () => this.handleJoinRoom());
+
+        this.btnCopyRoomCode.addEventListener('click', () => {
+          sound.playPop();
+          if (this.onlineRoomCode) {
+            navigator.clipboard.writeText(this.onlineRoomCode);
+            this.btnCopyRoomCode.textContent = 'Tersalin! ✅';
+            setTimeout(() => { this.btnCopyRoomCode.textContent = '📋 Salin Kode Room'; }, 2000);
+          }
+        });
+
+        this.btnLeaveRoom.addEventListener('click', () => {
+          sound.playPop();
+          this.leaveRoom();
+        });
+      }
+
+      handleCreateRoom() {
+        sound.playChime();
+        const codeWords = ['STAR', 'CUTE', 'PINK', 'BOBA', 'MEOW', 'PUFF', 'CAKE'];
+        const num = Math.floor(10 + Math.random() * 89);
+        const code = codeWords[Math.floor(Math.random() * codeWords.length)] + num;
+
+        this.onlineRoomCode = code;
+        this.myRole = 'X';
+        this.roomActive = true;
+        this.scores = { X: 0, O: 0, draw: 0 };
+        this.updateScoreboard();
+
+        const hostName = window.firebaseArcade && window.firebaseArcade.currentUser ? window.firebaseArcade.currentUser.name : 'Host';
+
+        // Update UI
+        this.currentRoomTag.textContent = code;
+        this.currentRoomTag.style.display = 'inline-block';
+        this.onlineStatusText.textContent = `Menunggu lawan di room ${code}...`;
+        this.roomActionsSetup.style.display = 'none';
+        this.roomActiveInfo.style.display = 'flex';
+        this.roomPlayersDesc.innerHTML = `Anda: <strong>Pemain X (🩵 ${hostName})</strong> | Bagikan kode <strong>${code}</strong> ke teman!`;
+        this.statusEl.textContent = `Room ${code}: Menunggu Lawan Masuk ⏳`;
+
+        // Listen for events
+        window.firebaseArcade.listenRoomEvents(code, (evt) => this.onRoomEvent(evt));
+
+        // Broadcast room creation
+        window.firebaseArcade.sendRoomEvent({
+          type: 'created',
+          roomCode: code,
+          hostName: hostName
+        });
+      }
+
+      handleJoinRoom() {
+        const code = this.inputRoomCode.value.trim().toUpperCase();
+        if (code.length < 3) {
+          alert('Masukkan kode room dengan benar!');
+          return;
+        }
+
+        sound.playChime();
+        this.onlineRoomCode = code;
+        this.myRole = 'O';
+        this.roomActive = true;
+        this.scores = { X: 0, O: 0, draw: 0 };
+        this.updateScoreboard();
+
+        const guestName = window.firebaseArcade && window.firebaseArcade.currentUser ? window.firebaseArcade.currentUser.name : 'Tamu';
+
+        this.currentRoomTag.textContent = code;
+        this.currentRoomTag.style.display = 'inline-block';
+        this.onlineStatusText.textContent = `Bergabung di room ${code}! 🟢`;
+        this.roomActionsSetup.style.display = 'none';
+        this.roomActiveInfo.style.display = 'flex';
+        this.roomPlayersDesc.innerHTML = `Anda: <strong>Pemain O (🌸 ${guestName})</strong> | Terhubung!`;
+        this.statusEl.textContent = 'Terhubung! Menunggu giliran Pemain X (🩵)';
+
+        // Listen for events
+        window.firebaseArcade.listenRoomEvents(code, (evt) => this.onRoomEvent(evt));
+
+        // Broadcast join event
+        window.firebaseArcade.sendRoomEvent({
+          type: 'join',
+          roomCode: code,
+          guestName: guestName
+        });
+
+        this.resetRound();
+      }
+
+      onRoomEvent(evt) {
+        if (!evt || evt.roomCode !== this.onlineRoomCode) return;
+
+        if (evt.type === 'join' && this.myRole === 'X') {
+          sound.playWin();
+          this.opponentName = evt.guestName;
+          this.onlineStatusText.textContent = `Lawan (${evt.guestName}) telah masuk! 🟢`;
+          this.roomPlayersDesc.innerHTML = `Anda: <strong>Pemain X (🩵)</strong> vs <strong>${evt.guestName} (🌸)</strong>`;
+          this.statusEl.textContent = 'Lawan bergabung! Giliran Anda (🩵)';
+        }
+
+        if (evt.type === 'move' && evt.player !== this.myRole) {
+          this.makeMove(evt.idx, evt.player, true);
+        }
+
+        if (evt.type === 'reset') {
+          this.resetRound(true);
+        }
+      }
+
+      leaveRoom() {
+        this.onlineRoomCode = null;
+        this.roomActive = false;
+        this.currentRoomTag.style.display = 'none';
+        this.onlineStatusText.textContent = 'Pilih atau Buat Room';
+        this.roomActionsSetup.style.display = 'block';
+        this.roomActiveInfo.style.display = 'none';
+        this.setMode('ai');
+      }
+
+      resetRound(isRemote = false) {
         this.board = Array(9).fill(null);
         this.currentPlayer = 'X';
         this.gameOver = false;
-        this.statusEl.textContent = 'Giliran: Pemain X 🩵';
+
+        if (this.isOnline) {
+          if (this.myRole === 'X') {
+            this.statusEl.textContent = 'Giliran Anda: Pemain X 🩵';
+          } else {
+            this.statusEl.textContent = 'Giliran Lawan: Pemain X 🩵';
+          }
+        } else {
+          this.statusEl.textContent = 'Giliran: Pemain X 🩵';
+        }
+
         this.cells.forEach(c => {
           c.textContent = '';
           c.className = 'ttt-cell';
@@ -3006,6 +4250,30 @@
 
       handleCellClick(idx) {
         if (this.board[idx] || this.gameOver) return;
+
+        // If online mode, check if it's player's turn
+        if (this.isOnline) {
+          if (!this.roomActive) {
+            sound.playTone(200, 'sawtooth', 0.15, 0.15);
+            return;
+          }
+          if (this.currentPlayer !== this.myRole) {
+            sound.playTone(200, 'sawtooth', 0.15, 0.15);
+            this.statusEl.textContent = `Bukan giliran Anda! Menunggu ${this.currentPlayer === 'X' ? '🩵' : '🌸'}`;
+            return;
+          }
+
+          // Make local move and broadcast
+          this.makeMove(idx, this.myRole);
+          window.firebaseArcade.sendRoomEvent({
+            type: 'move',
+            roomCode: this.onlineRoomCode,
+            idx: idx,
+            player: this.myRole
+          });
+          return;
+        }
+
         this.makeMove(idx, this.currentPlayer);
 
         if (!this.gameOver && this.isAI && this.currentPlayer === 'O') {
@@ -3013,7 +4281,8 @@
         }
       }
 
-      makeMove(idx, player) {
+      makeMove(idx, player, isRemote = false) {
+        if (this.board[idx] || this.gameOver) return;
         this.board[idx] = player;
         const cell = this.cells[idx];
         cell.textContent = player === 'X' ? '🩵' : '🌸';
@@ -3026,9 +4295,31 @@
           winPattern.forEach(i => this.cells[i].classList.add('win-highlight'));
           this.scores[player]++;
           this.updateScoreboard();
-          this.statusEl.textContent = `Pemenang: Pemain ${player} 🎉`;
-          sound.playWin();
-          particles.spawnCannons();
+
+          if (this.isOnline) {
+            const isWinner = player === this.myRole;
+            this.statusEl.textContent = isWinner ? 'Kamu Menang! 🎉🏆' : 'Lawan Menang! 🌸';
+            if (isWinner) {
+              sound.playWin();
+              particles.spawnCannons();
+              const currWins = (parseInt(localStorage.getItem('cute_arcade_ttt_wins') || '0', 10) + 1);
+              localStorage.setItem('cute_arcade_ttt_wins', currWins);
+              if (window.firebaseArcade) {
+                window.firebaseArcade.saveHighScore('tictactoe', currWins);
+              }
+            }
+          } else {
+            this.statusEl.textContent = `Pemenang: Pemain ${player} 🎉`;
+            sound.playWin();
+            particles.spawnCannons();
+            if (player === 'X') {
+              const currWins = (parseInt(localStorage.getItem('cute_arcade_ttt_wins') || '0', 10) + 1);
+              localStorage.setItem('cute_arcade_ttt_wins', currWins);
+              if (window.firebaseArcade) {
+                window.firebaseArcade.saveHighScore('tictactoe', currWins);
+              }
+            }
+          }
           return;
         }
 
@@ -3041,7 +4332,15 @@
         }
 
         this.currentPlayer = player === 'X' ? 'O' : 'X';
-        this.statusEl.textContent = `Giliran: Pemain ${this.currentPlayer} ${this.currentPlayer === 'X' ? '🩵' : '🌸'}`;
+        if (this.isOnline) {
+          if (this.currentPlayer === this.myRole) {
+            this.statusEl.textContent = `Giliran Anda (${this.myRole === 'X' ? '🩵' : '🌸'})!`;
+          } else {
+            this.statusEl.textContent = `Menunggu giliran lawan (${this.currentPlayer === 'X' ? '🩵' : '🌸'})...`;
+          }
+        } else {
+          this.statusEl.textContent = `Giliran: Pemain ${this.currentPlayer} ${this.currentPlayer === 'X' ? '🩵' : '🌸'}`;
+        }
       }
 
       makeAIMove() {
@@ -3648,7 +4947,12 @@
           if (match) {
             sound.playWin();
             particles.spawnCannons();
-            showGenericModal('🎂', 'Pesanan Sempurna!', 'Pelanggan sangat senang dengan kue Purble Place pesanan mereka!', () => this.generateNewOrder());
+            const currCakes = (parseInt(localStorage.getItem('cute_arcade_purble_cakes') || '0', 10) + 1);
+            localStorage.setItem('cute_arcade_purble_cakes', currCakes);
+            if (window.firebaseArcade) {
+              window.firebaseArcade.saveHighScore('purble', currCakes);
+            }
+            showGenericModal('🎂', 'Pesanan Sempurna!', 'Pelanggan sangat senang dengan kue Lilac Memory pesanan mereka!', () => this.generateNewOrder());
           } else {
             sound.playTone(180, 'sawtooth', 0.25, 0.2);
             showGenericModal('🤔', 'Kurang Pas!', 'Cek lagi bentuk, rasa, dan topping sesuai kartu pesanan ya!');
@@ -3704,13 +5008,23 @@
       if (genModalCallback) genModalCallback();
     });
 
-    /* Initialize all games */
+    /* Initialize all games and Firebase controllers */
     window.addEventListener('DOMContentLoaded', () => {
+      window.firebaseArcade = new FirebaseArcadeService();
+      window.authGate = new AuthGateController(window.firebaseArcade);
+      window.leaderboard = new LeaderboardController(window.firebaseArcade);
       window.blockBlastGame = new BlockBlastController();
       window.tictactoeGame = new TicTacToeController();
       window.bakingGame = new BakingGameController();
       window.dressUpGame = new DressUpController();
       window.purbleGame = new PurblePlaceController();
+
+      // Show Auth Gate Modal before playing if no player session exists
+      if (!window.firebaseArcade.currentUser) {
+        window.authGate.open();
+      } else {
+        window.authGate.updateHeaderProfile();
+      }
     });
   </script>
 </body>
