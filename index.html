@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Sugarfall Realm 🌸 - TetriPop Bloom, Celestial XO, Cloud Confection, Atelier Chic & Lilac Memory Cake</title>
-  <meta name="description" content="Koleksi game arcade pastel dreamy: TetriPop Bloom, Celestial XO, Cloud Confection, Atelier Chic, dan Lilac Memory Cake dalam 1 file!" />
+  <title>bloop! 🫧 - Sunset Breeze Pastel Arcade</title>
+  <meta name="description" content="bloop! - Koleksi game arcade pastel dreamy Sunset Breeze: TetriPop Bloom, Celestial XO, Cloud Confection, Atelier Chic, dan Lilac Memory Cake!" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -20,21 +20,28 @@
       --font-main: 'Fredoka', 'Outfit', sans-serif;
       --font-title: 'Outfit', sans-serif;
 
-      /* Colorful Pastel Theme Palette */
-      --pastel-pink: #ffd6e4;
-      --pastel-lavender: #f0e6ff;
-      --pastel-sky: #e0f2fe;
-      --pastel-mint: #dcfce7;
-      --pastel-peach: #ffedd5;
-      --pastel-lemon: #fef9c3;
-      --theme-accent: #ff4d94;
-      --theme-glow: rgba(255, 182, 218, 0.45);
+      /* Sunset Breeze Pastel Theme Palette */
+      --sunset-peach: #ffdfd3;
+      --sunset-lavender: #e0bbe4;
+      --sunset-yellow: #fff1c5;
+      --sunset-coral: #ff758f;
+      --sunset-periwinkle: #b8c0ff;
+      --sunset-rose: #f8b4cb;
 
-      --text-dark: #2f1738;
-      --text-muted: #74577f;
-      --card-bg: rgba(255, 255, 255, 0.76);
+      --pastel-pink: #ffd6e4;
+      --pastel-lavender: #e0bbe4;
+      --pastel-sky: #d7ecfd;
+      --pastel-mint: #dcfce7;
+      --pastel-peach: #ffdfd3;
+      --pastel-lemon: #fff1c5;
+      --theme-accent: #ff6b8b;
+      --theme-glow: rgba(255, 223, 211, 0.55);
+
+      --text-dark: #3a1d38;
+      --text-muted: #826284;
+      --card-bg: rgba(255, 255, 255, 0.82);
       --card-border: rgba(255, 255, 255, 0.95);
-      --card-shadow: 0 10px 30px rgba(180, 140, 190, 0.16);
+      --card-shadow: 0 10px 30px rgba(224, 187, 228, 0.22);
     }
 
     * {
@@ -48,9 +55,9 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #ffe5ec 0%, #f4e8ff 25%, #e0f2fe 50%, #e6fffa 75%, #fef3c7 100%);
+      background: linear-gradient(135deg, #fff2eb 0%, #fae8ff 25%, #fff9e6 50%, #ffeaf0 75%, #f2e4f9 100%);
       background-size: 300% 300%;
-      animation: pastelShift 20s ease infinite;
+      animation: pastelShift 18s ease infinite;
       font-family: var(--font-main);
       color: var(--text-dark);
       display: flex;
@@ -67,19 +74,19 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Ambient background pastel glows */
+    /* Ambient background pastel glows (Sunset Breeze) */
     .ambient-glow {
       position: fixed;
       top: -120px;
       left: 50%;
       transform: translateX(-50%);
-      width: 750px;
-      height: 750px;
-      background: radial-gradient(circle, rgba(255, 182, 218, 0.55) 0%, rgba(186, 230, 253, 0.35) 45%, transparent 70%);
+      width: 780px;
+      height: 780px;
+      background: radial-gradient(circle, rgba(255, 223, 211, 0.65) 0%, rgba(224, 187, 228, 0.45) 35%, rgba(255, 241, 197, 0.3) 65%, transparent 80%);
       pointer-events: none;
       z-index: 0;
       transition: background 0.5s ease;
-      filter: blur(50px);
+      filter: blur(55px);
     }
 
     /* Global Particle Canvas */
@@ -258,61 +265,69 @@
 
     .tab-pill {
       flex: 0 0 auto;
-      padding: 6px 13px;
-      border-radius: 18px;
-      font-size: 0.82rem;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 0.84rem;
       font-weight: 700;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.78);
       border: 1.5px solid rgba(255, 255, 255, 0.95);
       color: #62436d;
       display: flex;
       align-items: center;
-      gap: 5px;
-      box-shadow: 0 3px 10px rgba(180, 140, 190, 0.12);
-      backdrop-filter: blur(8px);
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+      gap: 6px;
+      box-shadow: 0 3px 12px rgba(180, 140, 190, 0.14);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      touch-action: manipulation;
     }
 
     .tab-pill:hover {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.98);
       color: #2b1832;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 16px rgba(180, 140, 190, 0.2);
+    }
+
+    .tab-pill:active {
+      transform: scale(0.95);
     }
 
     .tab-pill.active {
-      transform: scale(1.03);
+      transform: scale(1.04);
       color: #fff;
     }
 
     .tab-pill.tab-blockblast.active {
-      background: linear-gradient(135deg, #ff2e8c, #ff75b9);
-      border-color: #ffb3db;
-      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.45);
+      background: linear-gradient(135deg, #ff758f, #ff9aa2);
+      border-color: #ffd6e0;
+      box-shadow: 0 4px 16px rgba(255, 117, 143, 0.5);
     }
 
     .tab-pill.tab-tictactoe.active {
-      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
       border-color: #bae6fd;
-      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.45);
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.45);
     }
 
     .tab-pill.tab-baking.active {
-      background: linear-gradient(135deg, #ea580c, #fb923c);
+      background: linear-gradient(135deg, #fb923c, #f472b6);
       border-color: #fed7aa;
-      box-shadow: 0 4px 14px rgba(251, 146, 60, 0.45);
+      box-shadow: 0 4px 16px rgba(251, 146, 60, 0.45);
     }
 
     .tab-pill.tab-dressup.active {
-      background: linear-gradient(135deg, #db2777, #f472b6);
+      background: linear-gradient(135deg, #f472b6, #e0bbe4);
       border-color: #fbcfe8;
-      box-shadow: 0 4px 14px rgba(244, 114, 182, 0.45);
+      box-shadow: 0 4px 16px rgba(244, 114, 182, 0.45);
     }
 
     .tab-pill.tab-purble.active {
-      background: linear-gradient(135deg, #7e22ce, #c084fc);
+      background: linear-gradient(135deg, #c084fc, #b8c0ff);
       border-color: #e9d5ff;
-      box-shadow: 0 4px 14px rgba(192, 132, 252, 0.45);
+      box-shadow: 0 4px 16px rgba(192, 132, 252, 0.45);
     }
 
     /* Game Screens Container */
@@ -321,16 +336,15 @@
       display: none;
       flex-direction: column;
       align-items: center;
-      animation: fadeInView 0.3s ease forwards;
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .game-view.active {
       display: flex;
-    }
-
-    @keyframes fadeInView {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
     /* =========================================================================
@@ -956,88 +970,89 @@
     /* Character Profile Switcher (Dewasa/Anak & Cewe/Cowo) */
     .dti-profile-bar {
       width: 100%;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 105, 180, 0.3);
-      border-radius: 18px;
-      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1.5px solid rgba(255, 182, 218, 0.8);
+      border-radius: 20px;
+      padding: 8px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 6px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 16px rgba(255, 46, 140, 0.15);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 16px rgba(220, 160, 190, 0.15);
     }
 
     .dti-profile-group {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
 
     .dti-profile-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #ffd1eb;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #62436d;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-right: 2px;
     }
 
     .dti-toggle-group {
       display: flex;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(245, 230, 245, 0.8);
       padding: 2px;
-      border-radius: 12px;
+      border-radius: 14px;
       gap: 2px;
+      border: 1px solid rgba(255, 182, 218, 0.5);
     }
 
     .dti-pill-btn {
       background: transparent;
       border: none;
-      color: #e2d4e8;
+      color: #62436d;
       font-family: var(--font-main);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 9px;
+      padding: 5px 9px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
       gap: 3px;
+      white-space: nowrap;
     }
 
     .dti-pill-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.1);
+      color: #2b1832;
+      background: rgba(255, 255, 255, 0.6);
     }
 
     .dti-pill-btn.active {
-      background: linear-gradient(135deg, #ff2e8c, #ff70a6);
+      background: linear-gradient(135deg, #ff758f, #ff9aa2);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(255, 46, 140, 0.4);
+      box-shadow: 0 2px 8px rgba(255, 117, 143, 0.4);
     }
 
     .dti-random-btn {
-      background: linear-gradient(135deg, #9d4edd, #ff2e8c);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #c084fc, #ff758f);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       color: #fff;
       font-family: var(--font-title);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 800;
-      padding: 5px 10px;
-      border-radius: 12px;
+      padding: 6px 12px;
+      border-radius: 14px;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 4px;
-      box-shadow: 0 3px 10px rgba(157, 78, 221, 0.35);
+      box-shadow: 0 3px 10px rgba(255, 117, 143, 0.35);
       flex-shrink: 0;
     }
     .dti-random-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 14px rgba(255, 46, 140, 0.5);
+      transform: scale(1.06);
+      box-shadow: 0 4px 14px rgba(255, 117, 143, 0.5);
     }
 
     /* Runway Stage */
@@ -1101,6 +1116,59 @@
       100% { opacity: 0; }
     }
 
+    /* DTI Camera Zoom Rig & Viewfinder */
+    .dti-camera-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 117, 143, 0.5);
+      border-radius: 14px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #ff758f;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      z-index: 40;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .dti-camera-rig {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      transform-origin: center center;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+      z-index: 10;
+    }
+
+    .dti-camera-rig.zoom-face {
+      transform: scale(2.4) translateY(68px);
+    }
+    .dti-camera-rig.zoom-hair {
+      transform: scale(1.9) translateY(45px);
+    }
+    .dti-camera-rig.zoom-accessory {
+      transform: scale(2.0) translateY(55px);
+    }
+    .dti-camera-rig.zoom-outfit {
+      transform: scale(1.35) translateY(-5px);
+    }
+    .dti-camera-rig.zoom-shoes {
+      transform: scale(1.8) translateY(-65px);
+    }
+    .dti-camera-rig.zoom-handheld {
+      transform: scale(1.4) translateY(-10px) translateX(-20px);
+    }
+    .dti-camera-rig.zoom-full {
+      transform: scale(1) translateY(0);
+    }
+
     /* Avatar Canvas & Rigging */
     .dti-avatar-canvas {
       position: relative;
@@ -1132,11 +1200,11 @@
     .avatar-head {
       position: relative;
       background: var(--dti-skin);
-      box-shadow: inset 0 -3px 6px var(--dti-skin-shadow), 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 -3px 6px var(--dti-skin-shadow), 0 4px 12px rgba(0, 0, 0, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 15;
+      z-index: 10;
       transition: all 0.25s ease;
     }
 
@@ -1156,38 +1224,38 @@
       width: 60px;
       height: 58px;
       border-radius: 30px 30px 27px 27px;
-      box-shadow: inset 0 -2px 6px var(--dti-skin-shadow), 0 5px 12px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 0 -2px 6px var(--dti-skin-shadow), 0 5px 12px rgba(0, 0, 0, 0.2);
     }
 
-    /* Hair Back Layer */
+    /* Hair Back Layer - BEHIND head */
     .avatar-hair-back {
       position: absolute;
       top: -6px;
       left: -10px;
       right: -10px;
       height: 90px;
-      z-index: 4;
+      z-index: 2;
       pointer-events: none;
       transition: all 0.25s ease;
     }
 
-    /* Hair Front / Bangs Layer */
+    /* Hair Front / Bangs Layer - Delicate fringe that frames forehead without covering face */
     .avatar-hair-front {
       position: absolute;
-      top: -8px;
-      left: -6px;
-      right: -6px;
-      height: 48px;
-      z-index: 22;
+      top: -4px;
+      left: 1px;
+      right: 1px;
+      height: 12px;
+      z-index: 16;
       pointer-events: none;
       transition: all 0.25s ease;
     }
 
-    /* Head Accessory */
+    /* Head Accessory (Tiaras, Hats, Crowns) */
     .avatar-accessory {
       position: absolute;
-      top: -24px;
-      font-size: 1.8rem;
+      top: -14px;
+      font-size: 1.5rem;
       z-index: 30;
       filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
       transition: all 0.25s ease;
@@ -1197,9 +1265,9 @@
     /* Handheld Accessory */
     .avatar-handheld {
       position: absolute;
-      right: 4px;
-      bottom: 60px;
-      font-size: 1.7rem;
+      right: -18px;
+      top: 110px;
+      font-size: 1.5rem;
       z-index: 28;
       filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
       animation: floatHandheld 3s ease-in-out infinite alternate;
@@ -1210,7 +1278,7 @@
       100% { transform: translateY(-4px) rotate(4deg); }
     }
 
-    /* Clear, Detailed Expressive Face */
+    /* Clear, Detailed Expressive Face - ON TOP */
     .avatar-face {
       position: absolute;
       inset: 0;
@@ -1218,13 +1286,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      z-index: 18;
+      z-index: 25;
       pointer-events: none;
-      padding-top: 15px;
+      padding-top: 14px;
     }
     .avatar-anak-cewe .avatar-face,
     .avatar-anak-cowo .avatar-face {
-      padding-top: 18px;
+      padding-top: 16px;
     }
 
     /* Eyebrows */
@@ -1665,15 +1733,15 @@
     /* Wardrobe Panel */
     .dti-wardrobe {
       width: 100%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 105, 180, 0.28);
-      border-radius: 20px;
-      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1.5px solid rgba(255, 182, 218, 0.8);
+      border-radius: 22px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 25px rgba(180, 120, 160, 0.15);
     }
 
     .dti-cat-tabs {
@@ -1681,69 +1749,73 @@
       gap: 6px;
       overflow-x: auto;
       scrollbar-width: none;
-      padding-bottom: 2px;
+      padding-bottom: 4px;
     }
     .dti-cat-tabs::-webkit-scrollbar { display: none; }
 
     .dti-cat-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      color: #ffd6ec;
-      padding: 6px 12px;
-      border-radius: 14px;
-      font-size: 0.78rem;
-      font-weight: 700;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid rgba(255, 182, 218, 0.7);
+      color: #5c3558;
+      padding: 6px 13px;
+      border-radius: 16px;
+      font-size: 0.82rem;
+      font-weight: 800;
       cursor: pointer;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 4px;
-      transition: all 0.2s ease;
+      gap: 5px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
     .dti-cat-btn:hover {
-      background: rgba(255, 255, 255, 0.16);
+      background: #ffffff;
+      color: #2b1832;
       transform: translateY(-1px);
     }
     .dti-cat-btn.active {
-      background: linear-gradient(135deg, #ff2e8c, #ff75b9);
+      background: linear-gradient(135deg, #ff758f, #ff9aa2);
       color: #fff;
-      border-color: #ff99d6;
-      box-shadow: 0 3px 10px rgba(255, 46, 140, 0.4);
+      border-color: #ffd6e0;
+      box-shadow: 0 3px 12px rgba(255, 117, 143, 0.45);
+      transform: scale(1.03);
     }
 
     .dti-item-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      max-height: 145px;
+      max-height: 155px;
       overflow-y: auto;
       scrollbar-width: thin;
       padding-right: 2px;
     }
 
     .dti-item-card {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 14px;
-      height: 60px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid rgba(255, 182, 218, 0.6);
+      border-radius: 16px;
+      height: 64px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
-      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 4px;
       text-align: center;
+      box-shadow: 0 2px 8px rgba(180, 140, 190, 0.08);
     }
     .dti-item-card .item-emoji {
-      font-size: 1.45rem;
+      font-size: 1.5rem;
       line-height: 1;
     }
     .dti-item-card .item-name {
-      font-size: 0.62rem;
-      color: #ffd6ec;
-      font-weight: 600;
+      font-size: 0.68rem;
+      color: #4a2840;
+      font-weight: 700;
       margin-top: 3px;
       max-width: 100%;
       overflow: hidden;
@@ -1752,18 +1824,19 @@
     }
 
     .dti-item-card:hover {
-      transform: scale(1.06);
-      background: rgba(255, 105, 180, 0.22);
-      border-color: rgba(255, 105, 180, 0.5);
+      transform: scale(1.05);
+      background: #ffffff;
+      border-color: #ff758f;
+      box-shadow: 0 4px 12px rgba(255, 117, 143, 0.25);
     }
     .dti-item-card.active {
-      background: linear-gradient(135deg, rgba(255, 46, 140, 0.45), rgba(255, 117, 185, 0.45));
-      border-color: #ff85c0;
-      box-shadow: 0 0 14px rgba(255, 46, 140, 0.6);
-      transform: scale(1.03);
+      background: linear-gradient(135deg, #fff0f3, #ffe3ea);
+      border-color: #ff758f;
+      box-shadow: 0 0 12px rgba(255, 117, 143, 0.5);
+      transform: scale(1.04);
     }
     .dti-item-card.active .item-name {
-      color: #fff;
+      color: #d81b60;
       font-weight: 800;
     }
 
@@ -1904,22 +1977,24 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(35, 18, 40, 0.5);
-      backdrop-filter: blur(8px);
+      background: rgba(35, 18, 40, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       z-index: 300;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 16px;
     }
     .modal-backdrop.show { opacity: 1; pointer-events: auto; }
 
     .modal-card {
-      background: linear-gradient(160deg, #ffffff 0%, #fff0f6 55%, #f4e8ff 100%);
-      border: 2px solid #ffb6d9;
+      position: relative;
+      background: linear-gradient(160deg, #ffffff 0%, #fff2ec 45%, #fceeff 100%);
+      border: 2px solid #ffccd9;
       border-radius: 28px;
       width: 100%;
       max-width: 420px;
@@ -1928,7 +2003,38 @@
       padding: 24px 20px;
       text-align: center;
       color: #3b2344;
-      box-shadow: 0 20px 50px rgba(130, 80, 140, 0.25), 0 0 35px rgba(255, 182, 218, 0.4);
+      box-shadow: 0 20px 50px rgba(130, 80, 140, 0.25), 0 0 35px rgba(255, 223, 211, 0.5);
+      transform: scale(0.92) translateY(10px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-backdrop.show .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid rgba(255, 182, 218, 0.7);
+      color: #826284;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(180, 140, 190, 0.15);
+    }
+    .modal-close-btn:hover {
+      background: #ff758f;
+      color: #ffffff;
+      transform: scale(1.1);
     }
 
     .game-grid-drawer {
@@ -2154,7 +2260,7 @@
     <header>
       <div class="header-top">
         <div class="brand-title" id="main-brand-title">
-          <span>🌸</span> Sugarfall Realm
+          <span>🫧</span> bloop!
         </div>
         <div class="header-actions">
           <button id="btn-user-profile" class="user-pill-btn" title="Profil Pemain">
@@ -2394,76 +2500,80 @@
 
         <!-- Runway Stage -->
         <div class="dti-stage" id="dti-stage">
+          <div class="dti-camera-badge" id="dti-camera-badge">🔍 Fokus: Busana</div>
           <div class="dti-spotlight"></div>
           <div class="dti-runway-floor"></div>
           <div class="dti-camera-flash" id="dti-flash"></div>
 
-          <!-- Avatar Rigging -->
-          <div class="dti-avatar-canvas avatar-dewasa-cewe" id="dti-avatar">
-            <!-- Head Accessory (Tiaras, Hats, Ribbons) -->
-            <div class="avatar-accessory" id="dti-acc-display">👑</div>
+          <!-- Camera Zoom Rig Container -->
+          <div class="dti-camera-rig zoom-outfit" id="dti-camera-rig">
+            <!-- Avatar Rigging -->
+            <div class="dti-avatar-canvas avatar-dewasa-cewe" id="dti-avatar">
+              <!-- Head Accessory (Tiaras, Hats, Ribbons) -->
+              <div class="avatar-accessory" id="dti-acc-display">👑</div>
 
-            <!-- Handheld Prop (Bags, Teddy bear, Boba, Pet, Guitar) -->
-            <div class="avatar-handheld" id="dti-handheld-display">👜</div>
+              <!-- Handheld Prop (Bags, Teddy bear, Boba, Pet, Guitar) -->
+              <div class="avatar-handheld" id="dti-handheld-display">👜</div>
 
-            <!-- Head & Expressive Face -->
-            <div class="avatar-head" id="dti-avatar-head">
-              <!-- Hair Back Layer -->
-              <div class="avatar-hair-back" id="dti-hair-back"></div>
+              <!-- Head & Expressive Face -->
+              <div class="avatar-head" id="dti-avatar-head">
+                <!-- Hair Back Layer -->
+                <div class="avatar-hair-back" id="dti-hair-back"></div>
 
-              <!-- Face & Expressive Features -->
-              <div class="avatar-face face-diva" id="dti-face-container">
-                <div class="avatar-eyebrows">
-                  <div class="avatar-eyebrow left" id="dti-eyebrow-left"></div>
-                  <div class="avatar-eyebrow right" id="dti-eyebrow-right"></div>
-                </div>
-                <div class="avatar-eyes-wrapper" id="dti-eyes-wrapper">
-                  <div class="avatar-eye left" id="dti-eye-left">
-                    <div class="eye-iris">
-                      <div class="eye-pupil"></div>
-                      <div class="eye-sparkle main"></div>
-                      <div class="eye-sparkle sub"></div>
-                    </div>
-                    <div class="eye-lashes"></div>
+                <!-- Hair Front Layer (Bangs & Framing) -->
+                <div class="avatar-hair-front" id="dti-hair-front"></div>
+
+                <!-- Face & Expressive Features -->
+                <div class="avatar-face face-diva" id="dti-face-container">
+                  <div class="avatar-eyebrows">
+                    <div class="avatar-eyebrow left" id="dti-eyebrow-left"></div>
+                    <div class="avatar-eyebrow right" id="dti-eyebrow-right"></div>
                   </div>
-                  <div class="avatar-eye right" id="dti-eye-right">
-                    <div class="eye-iris">
-                      <div class="eye-pupil"></div>
-                      <div class="eye-sparkle main"></div>
-                      <div class="eye-sparkle sub"></div>
+                  <div class="avatar-eyes-wrapper" id="dti-eyes-wrapper">
+                    <div class="avatar-eye left" id="dti-eye-left">
+                      <div class="eye-iris">
+                        <div class="eye-pupil"></div>
+                        <div class="eye-sparkle main"></div>
+                        <div class="eye-sparkle sub"></div>
+                      </div>
+                      <div class="eye-lashes"></div>
                     </div>
-                    <div class="eye-lashes"></div>
+                    <div class="avatar-eye right" id="dti-eye-right">
+                      <div class="eye-iris">
+                        <div class="eye-pupil"></div>
+                        <div class="eye-sparkle main"></div>
+                        <div class="eye-sparkle sub"></div>
+                      </div>
+                      <div class="eye-lashes"></div>
+                    </div>
                   </div>
+                  <div class="avatar-blush left"></div>
+                  <div class="avatar-blush right"></div>
+                  <div class="avatar-nose"></div>
+                  <div class="avatar-mouth" id="dti-mouth"></div>
                 </div>
-                <div class="avatar-blush left"></div>
-                <div class="avatar-blush right"></div>
-                <div class="avatar-nose"></div>
-                <div class="avatar-mouth" id="dti-mouth"></div>
               </div>
 
-              <!-- Hair Front Layer (Bangs & Framing) -->
-              <div class="avatar-hair-front" id="dti-hair-front"></div>
-            </div>
-
-            <!-- Neck, Torso & Arms -->
-            <div class="avatar-torso-wrapper">
-              <div class="avatar-arm left" id="dti-arm-left"></div>
-              <div class="avatar-neck" id="dti-neck"></div>
-              <div class="avatar-torso" id="dti-torso">
-                <div class="avatar-outfit" id="dti-outfit-display"></div>
+              <!-- Neck, Torso & Arms -->
+              <div class="avatar-torso-wrapper">
+                <div class="avatar-arm left" id="dti-arm-left"></div>
+                <div class="avatar-neck" id="dti-neck"></div>
+                <div class="avatar-torso" id="dti-torso">
+                  <div class="avatar-outfit" id="dti-outfit-display"></div>
+                </div>
+                <div class="avatar-arm right" id="dti-arm-right"></div>
               </div>
-              <div class="avatar-arm right" id="dti-arm-right"></div>
-            </div>
 
-            <!-- Legs & Shoes -->
-            <div class="avatar-legs-wrapper" id="dti-legs">
-              <div class="avatar-leg left" id="dti-leg-left">
-                <div class="avatar-sock" id="dti-sock-left"></div>
-                <div class="avatar-shoe" id="dti-shoe-left"></div>
-              </div>
-              <div class="avatar-leg right" id="dti-leg-right">
-                <div class="avatar-sock" id="dti-sock-right"></div>
-                <div class="avatar-shoe" id="dti-shoe-right"></div>
+              <!-- Legs & Shoes -->
+              <div class="avatar-legs-wrapper" id="dti-legs">
+                <div class="avatar-leg left" id="dti-leg-left">
+                  <div class="avatar-sock" id="dti-sock-left"></div>
+                  <div class="avatar-shoe" id="dti-shoe-left"></div>
+                </div>
+                <div class="avatar-leg right" id="dti-leg-right">
+                  <div class="avatar-sock" id="dti-sock-right"></div>
+                  <div class="avatar-shoe" id="dti-shoe-right"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -2575,26 +2685,30 @@
   <!-- GAME OVER / RESULT POPUP -->
   <div class="modal-backdrop" id="generic-modal">
     <div class="modal-card">
+      <button class="modal-close-btn" id="btn-close-gen-modal" title="Tutup">✕</button>
       <div id="gen-modal-emoji" style="font-size: 3.2rem; margin-bottom: 8px;">🎉</div>
-      <h2 id="gen-modal-title" style="font-family: var(--font-title); font-weight: 900; font-size: 1.8rem; margin-bottom: 6px;">Hebat!</h2>
-      <p id="gen-modal-desc" style="font-size: 0.95rem; color: #ffd6ec; margin-bottom: 18px;">Penampilan memukau!</p>
-      <button class="btn-action" id="btn-gen-modal-ok" style="width: 100%;">Lanjut 🌸</button>
+      <h2 id="gen-modal-title" style="font-family: var(--font-title); font-weight: 900; font-size: 1.8rem; margin-bottom: 6px; color: #3a1d38;">Hebat!</h2>
+      <p id="gen-modal-desc" style="font-size: 0.95rem; color: #826284; margin-bottom: 18px;">Penampilan memukau!</p>
+      <button class="btn-action" id="btn-gen-modal-ok" style="width: 100%; background: linear-gradient(135deg, #ff758f, #ff9aa2);">Lanjut 🌸</button>
     </div>
+  </div>
+
   <!-- =========================================================================
-       MODAL 1: AUTH & SIGN IN GATE (MUNCUL SEBELUM MAIN)
+       MODAL 1: AUTH & SIGN IN GATE
        ========================================================================= -->
   <div class="modal-backdrop" id="modal-auth-gate">
     <div class="modal-card auth-card">
-      <div style="font-size: 2.8rem; margin-bottom: 2px; animation: bounce 1.8s infinite;">🌸</div>
-      <h2 style="font-family: var(--font-title); font-weight: 900; font-size: 1.6rem; color: #d81b60; margin-bottom: 2px;">
-        Sugarfall Realm
+      <button class="modal-close-btn" id="btn-close-auth-gate" title="Tutup">✕</button>
+      <div style="font-size: 2.8rem; margin-bottom: 2px; animation: bounce 1.8s infinite;">🫧</div>
+      <h2 style="font-family: var(--font-title); font-weight: 900; font-size: 1.6rem; color: #ff758f; margin-bottom: 2px;">
+        bloop!
       </h2>
-      <p style="font-size: 0.82rem; color: #7c6882; margin-bottom: 12px;">
+      <p style="font-size: 0.82rem; color: #826284; margin-bottom: 12px;">
         Pilih avatar imut & masuk akun untuk simpan skormu ke Cloud!
       </p>
 
       <!-- Avatar Selector -->
-      <div style="font-size: 0.78rem; font-weight: 800; color: #ff2e8c; text-align: left; margin-bottom: 2px;">
+      <div style="font-size: 0.78rem; font-weight: 800; color: #ff758f; text-align: left; margin-bottom: 4px;">
         PILIH AVATAR KAMU:
       </div>
       <div class="avatar-grid" id="auth-avatar-grid">
@@ -2626,12 +2740,15 @@
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
-        <button class="btn-action" id="btn-submit-auth" style="width: 100%;">
+        <button class="btn-action" id="btn-submit-auth" style="width: 100%; background: linear-gradient(135deg, #ff758f, #ff9aa2);">
           <span>Mulai Bermain! 🎮✨</span>
+        </button>
+        <button type="button" id="btn-guest-skip" style="width: 100%; background: transparent; border: 1.5px solid #ffccd9; border-radius: 18px; padding: 8px; font-family: var(--font-title); font-weight: 800; font-size: 0.82rem; color: #826284; cursor: pointer; transition: all 0.2s ease;">
+          ⚡ Main Langsung Sebagai Tamu
         </button>
       </div>
 
-      <div id="auth-feedback-msg" style="margin-top: 8px; font-size: 0.78rem; font-weight: 700; color: #d81b60; min-height: 18px;"></div>
+      <div id="auth-feedback-msg" style="margin-top: 8px; font-size: 0.78rem; font-weight: 700; color: #ff758f; min-height: 18px;"></div>
 
       <div style="font-size: 0.72rem; color: #9c88a4; margin-top: 4px;">
         ☁️ Didukung Firebase Cloud Sync & Leaderboard Realtime
@@ -2644,21 +2761,22 @@
        ========================================================================= -->
   <div class="modal-backdrop" id="modal-user-profile">
     <div class="modal-card">
+      <button class="modal-close-btn" id="btn-close-prof-x" title="Tutup">✕</button>
       <div id="prof-avatar-display" style="font-size: 3.5rem; margin-bottom: 2px;">🐱</div>
-      <h2 id="prof-name-display" style="font-family: var(--font-title); font-weight: 900; font-size: 1.5rem; color: #d81b60; margin-bottom: 2px;">
+      <h2 id="prof-name-display" style="font-family: var(--font-title); font-weight: 900; font-size: 1.5rem; color: #ff758f; margin-bottom: 2px;">
         Pemain Imut
       </h2>
-      <p id="prof-type-display" style="font-size: 0.8rem; color: #7c6882; margin-bottom: 14px;">Akun Tamu (Tersimpan di Cloud)</p>
+      <p id="prof-type-display" style="font-size: 0.8rem; color: #826284; margin-bottom: 14px;">Akun Tamu (Tersimpan di Cloud)</p>
 
       <!-- Stats Summary -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
         <div style="background: rgba(255, 230, 240, 0.75); border-radius: 14px; padding: 8px; border: 1px solid #ffccd9;">
-          <div style="font-size: 0.7rem; color: #ff2e8c; font-weight: 800;">🌸 TETRIPOP BEST</div>
-          <div id="prof-stat-bb" style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 900; color: #2d1832;">0</div>
+          <div style="font-size: 0.7rem; color: #ff758f; font-weight: 800;">🌸 TETRIPOP BEST</div>
+          <div id="prof-stat-bb" style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 900; color: #3a1d38;">0</div>
         </div>
         <div style="background: rgba(224, 242, 254, 0.75); border-radius: 14px; padding: 8px; border: 1px solid #bae6fd;">
           <div style="font-size: 0.7rem; color: #0284c7; font-weight: 800;">🩵 CELESTIAL XO WINS</div>
-          <div id="prof-stat-ttt" style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 900; color: #2d1832;">0</div>
+          <div id="prof-stat-ttt" style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 900; color: #3a1d38;">0</div>
         </div>
       </div>
 
@@ -2667,7 +2785,7 @@
         <button class="btn-action" id="btn-open-firebase-config" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #451a03; font-size: 0.85rem; padding: 8px;">
           ⚙️ Atur Konfigurasi Firebase Sendiri
         </button>
-        <button class="btn-action" id="btn-switch-account" style="background: linear-gradient(135deg, #a855f7, #c084fc); font-size: 0.85rem; padding: 8px;">
+        <button class="btn-action" id="btn-switch-account" style="background: linear-gradient(135deg, #c084fc, #b8c0ff); font-size: 0.85rem; padding: 8px;">
           🔄 Ganti Akun / Avatar
         </button>
         <button class="btn-action" id="btn-close-profile" style="background: rgba(200, 180, 210, 0.35); color: #4a3055; font-size: 0.85rem; padding: 8px;">
@@ -2702,12 +2820,13 @@
        ========================================================================= -->
   <div class="modal-backdrop" id="modal-leaderboard">
     <div class="modal-card" style="max-width: 440px;">
+      <button class="modal-close-btn" id="btn-close-lb-x" title="Tutup">✕</button>
       <div style="font-size: 2.8rem; margin-bottom: 2px;">🏆</div>
       <h2 style="font-family: var(--font-title); font-weight: 900; font-size: 1.6rem; color: #b45309; margin-bottom: 2px;">
         Papan Peringkat Global
       </h2>
-      <p style="font-size: 0.8rem; color: #7c6882; margin-bottom: 12px;">
-        Pemain terbaik Sugarfall Realm di seluruh dunia! ☁️
+      <p style="font-size: 0.8rem; color: #826284; margin-bottom: 12px;">
+        Pemain terbaik bloop! di seluruh dunia! ☁️
       </p>
 
       <!-- Leaderboard Tabs -->
@@ -3060,15 +3179,52 @@
         // Submit
         this.btnSubmit.addEventListener('click', () => this.handleSubmit());
 
+        // Quick Guest Skip Button
+        const btnGuestSkip = document.getElementById('btn-guest-skip');
+        if (btnGuestSkip) {
+          btnGuestSkip.addEventListener('click', () => {
+            sound.playPop();
+            const nickname = this.inputNickname.value.trim() || 'Pemain 1';
+            this.fb.loginAsGuest(nickname, this.selectedAvatar);
+            this.onLoginSuccess();
+          });
+        }
+
+        // Close Auth Gate Button
+        const btnCloseGate = document.getElementById('btn-close-auth-gate');
+        if (btnCloseGate) {
+          btnCloseGate.addEventListener('click', () => {
+            sound.playPop();
+            this.modal.classList.remove('show');
+          });
+        }
+
+        // Backdrop click to close
+        this.modal.addEventListener('click', (e) => {
+          if (e.target === this.modal) this.modal.classList.remove('show');
+        });
+
         // Header Profile click
         this.btnUserProfile.addEventListener('click', () => {
           sound.playPop();
           this.openProfileModal();
         });
 
+        const btnCloseProfX = document.getElementById('btn-close-prof-x');
+        if (btnCloseProfX) {
+          btnCloseProfX.addEventListener('click', () => {
+            sound.playPop();
+            this.profileModal.classList.remove('show');
+          });
+        }
+
         this.btnCloseProfile.addEventListener('click', () => {
           sound.playPop();
           this.profileModal.classList.remove('show');
+        });
+
+        this.profileModal.addEventListener('click', (e) => {
+          if (e.target === this.profileModal) this.profileModal.classList.remove('show');
         });
 
         this.btnSwitchAccount.addEventListener('click', () => {
@@ -3233,6 +3389,18 @@
         this.btnClose.addEventListener('click', () => {
           sound.playPop();
           this.modal.classList.remove('show');
+        });
+
+        const btnCloseX = document.getElementById('btn-close-lb-x');
+        if (btnCloseX) {
+          btnCloseX.addEventListener('click', () => {
+            sound.playPop();
+            this.modal.classList.remove('show');
+          });
+        }
+
+        this.modal.addEventListener('click', (e) => {
+          if (e.target === this.modal) this.modal.classList.remove('show');
         });
 
         this.btnRefresh.addEventListener('click', () => {
@@ -3482,29 +3650,39 @@
     const gameCards = document.querySelectorAll('.game-card-btn');
 
     const THEMES = {
-      blockblast: { title: '<span>🌸</span> TetriPop Bloom', glow: 'rgba(255, 77, 148, 0.4)' },
-      tictactoe:  { title: '<span>🩵</span> Celestial XO', glow: 'rgba(56, 189, 248, 0.4)' },
-      baking:     { title: '<span>🧁</span> Cloud Confection', glow: 'rgba(251, 146, 60, 0.4)' },
-      dressup:    { title: '<span>🎀</span> Atelier Chic', glow: 'rgba(244, 114, 182, 0.4)' },
-      purble:     { title: '<span>💜</span> Lilac Memory Cake', glow: 'rgba(192, 132, 252, 0.4)' }
+      blockblast: { title: '<span>🫧</span> bloop! - TetriPop', glow: 'rgba(255, 117, 143, 0.45)' },
+      tictactoe:  { title: '<span>🩵</span> Celestial XO', glow: 'rgba(56, 189, 248, 0.45)' },
+      baking:     { title: '<span>🧁</span> Cloud Confection', glow: 'rgba(251, 146, 60, 0.45)' },
+      dressup:    { title: '<span>🎀</span> Atelier Chic', glow: 'rgba(244, 114, 182, 0.45)' },
+      purble:     { title: '<span>💜</span> Lilac Memory Cake', glow: 'rgba(192, 132, 252, 0.45)' }
     };
 
     function switchGame(gameKey) {
+      if (!gameKey) return;
       sound.playPop();
       tabPills.forEach(tab => tab.classList.toggle('active', tab.dataset.game === gameKey));
-      gameViews.forEach(view => view.classList.toggle('active', view.id === `view-${gameKey}`));
+      gameViews.forEach(view => {
+        const isActive = view.id === `view-${gameKey}`;
+        view.classList.toggle('active', isActive);
+      });
       
       const theme = THEMES[gameKey];
       if (theme) {
         brandTitle.innerHTML = theme.title;
         ambientGlow.style.background = `radial-gradient(circle, ${theme.glow} 0%, transparent 70%)`;
       }
-      moreGamesModal.classList.remove('show');
+      if (moreGamesModal) moreGamesModal.classList.remove('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     tabPills.forEach(pill => pill.addEventListener('click', () => switchGame(pill.dataset.game)));
     moreGamesBtn.addEventListener('click', () => { sound.playPop(); moreGamesModal.classList.add('show'); });
     closeDrawerBtn.addEventListener('click', () => moreGamesModal.classList.remove('show'));
+    if (moreGamesModal) {
+      moreGamesModal.addEventListener('click', (e) => {
+        if (e.target === moreGamesModal) moreGamesModal.classList.remove('show');
+      });
+    }
     gameCards.forEach(card => card.addEventListener('click', () => switchGame(card.dataset.select)));
 
     // Sound Toggle
@@ -4477,7 +4655,7 @@
     }
 
     /* =========================================================================
-       GAME 4 LOGIC: DRESS TO IMPRESS (Runway & Chibi System)
+       GAME 4 LOGIC: DRESS TO IMPRESS (Runway & Chibi System with Dynamic Zoom)
        ========================================================================= */
     class DressUpController {
       constructor() {
@@ -4486,6 +4664,8 @@
         this.currentCategory = 'outfit'; // 'outfit' | 'hair' | 'face' | 'accessory' | 'handheld' | 'shoes' | 'skin'
 
         this.avatarEl = document.getElementById('dti-avatar');
+        this.cameraRig = document.getElementById('dti-camera-rig');
+        this.cameraBadge = document.getElementById('dti-camera-badge');
         this.hairBackEl = document.getElementById('dti-hair-back');
         this.hairFrontEl = document.getElementById('dti-hair-front');
         this.faceContainer = document.getElementById('dti-face-container');
@@ -4522,6 +4702,27 @@
 
       get profileKey() {
         return `${this.currentAge}_${this.currentGender}`;
+      }
+
+      setCameraZoom(cat) {
+        if (!this.cameraRig) return;
+        this.cameraRig.className = 'dti-camera-rig';
+
+        const zoomMap = {
+          face: { cls: 'zoom-face', label: '💄 Fokus: Makeup & Wajah' },
+          hair: { cls: 'zoom-hair', label: '💇 Fokus: Gaya Rambut' },
+          accessory: { cls: 'zoom-accessory', label: '👑 Fokus: Aksesoris Kepala' },
+          outfit: { cls: 'zoom-outfit', label: '👗 Fokus: Busana & Gaun' },
+          shoes: { cls: 'zoom-shoes', label: '👠 Fokus: Sepatu & Kaki' },
+          handheld: { cls: 'zoom-handheld', label: '👜 Fokus: Prop Pegangan' },
+          skin: { cls: 'zoom-full', label: '✨ Fokus: Keseluruhan' }
+        };
+
+        const target = zoomMap[cat] || { cls: 'zoom-full', label: '✨ Fokus: Keseluruhan' };
+        this.cameraRig.classList.add(target.cls);
+        if (this.cameraBadge) {
+          this.cameraBadge.textContent = target.label;
+        }
       }
 
       initDatabase() {
@@ -4580,12 +4781,12 @@
               { id: 'dc_fairy', emoji: '🧚', name: 'Butterfly Fairy', style: 'background: linear-gradient(180deg, #6ee7b7 0%, #f472b6 60%, #ec4899 100%); border-radius: 8px 8px 26px 26px;' }
             ],
             hair: [
-              { id: 'dc_h_blonde', emoji: '👱‍♀️', name: 'Blonde Waves', back: 'background: #facc15; border-radius: 24px 24px 18px 18px; height: 95px; width: 62px;', front: 'background: #facc15; border-radius: 20px 20px 4px 4px; height: 26px;' },
-              { id: 'dc_h_pony', emoji: '👩‍🦱', name: 'Raven Ponytail', back: 'background: #09090b; border-radius: 20px 24px 6px 20px; height: 105px; width: 56px; transform: rotate(-5deg);', front: 'background: #09090b; border-radius: 16px 16px 2px 2px; height: 22px;' },
-              { id: 'dc_h_pink', emoji: '💇‍♀️', name: 'Sakura Bangs', back: 'background: #ff2e8c; border-radius: 22px 22px 14px 14px; height: 92px; width: 60px;', front: 'background: #ff2e8c; border-radius: 18px 18px 4px 4px; height: 24px;' },
-              { id: 'dc_h_bob', emoji: '👩', name: 'Lilac Bob', back: 'background: #a855f7; border-radius: 22px 22px 10px 10px; height: 65px; width: 56px;', front: 'background: #a855f7; border-radius: 18px 18px 4px 4px; height: 24px;' },
-              { id: 'dc_h_brunette', emoji: '👩‍🦰', name: 'Chestnut Curls', back: 'background: #78350f; border-radius: 24px 24px 16px 16px; height: 90px; width: 62px;', front: 'background: #78350f; border-radius: 18px 18px 4px 4px; height: 24px;' },
-              { id: 'dc_h_silver', emoji: '👸', name: 'Silver Goddess', back: 'background: #e2e8f0; border-radius: 22px 22px 20px 20px; height: 98px; width: 64px;', front: 'background: #e2e8f0; border-radius: 18px 18px 4px 4px; height: 25px;' }
+              { id: 'dc_h_blonde', emoji: '👱‍♀️', name: 'Blonde Waves', back: 'background: linear-gradient(180deg, #fde047 0%, #eab308 60%, #a16207 100%); border-radius: 28px 28px 18px 18px; height: 110px; width: 68px; left: -10px; top: -6px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);', front: 'background: #fde047; border-radius: 16px 16px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'dc_h_pony', emoji: '👩‍🦱', name: 'Raven Ponytail', back: 'background: linear-gradient(180deg, #27272a 0%, #09090b 100%); border-radius: 26px 26px 8px 24px; height: 115px; width: 60px; left: 4px; top: -6px; transform: rotate(-8deg);', front: 'background: #27272a; border-radius: 16px 16px 2px 2px; height: 10px; top: -3px; left: 2px; right: 2px;' },
+              { id: 'dc_h_pink', emoji: '💇‍♀️', name: 'Sakura Bangs', back: 'background: linear-gradient(180deg, #ff758f 0%, #ff4d6d 60%, #c9184a 100%); border-radius: 26px 26px 16px 16px; height: 105px; width: 66px; left: -9px; top: -6px;', front: 'background: #ff758f; border-radius: 16px 16px 5px 5px; height: 11px; top: -4px; left: 2px; right: 2px;' },
+              { id: 'dc_h_bob', emoji: '👩', name: 'Lilac Bob', back: 'background: linear-gradient(180deg, #c084fc 0%, #a855f7 60%, #7e22ce 100%); border-radius: 26px 26px 14px 14px; height: 74px; width: 62px; left: -7px; top: -6px;', front: 'background: #c084fc; border-radius: 16px 16px 4px 4px; height: 11px; top: -4px; left: 2px; right: 2px;' },
+              { id: 'dc_h_brunette', emoji: '👩‍🦰', name: 'Chestnut Curls', back: 'background: linear-gradient(180deg, #92400e 0%, #78350f 60%, #451a03 100%); border-radius: 28px 28px 20px 20px; height: 110px; width: 70px; left: -11px; top: -6px;', front: 'background: #92400e; border-radius: 16px 16px 4px 4px; height: 11px; top: -4px; left: 2px; right: 2px;' },
+              { id: 'dc_h_silver', emoji: '👸', name: 'Silver Goddess', back: 'background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 60%, #64748b 100%); border-radius: 28px 28px 22px 22px; height: 120px; width: 72px; left: -12px; top: -6px;', front: 'background: #f8fafc; border-radius: 16px 16px 4px 4px; height: 12px; top: -4px; left: 2px; right: 2px;' }
             ],
             shoes: [
               { id: 'dc_s_pink', emoji: '👠', name: 'Stiletto Pink', color: '#ff2e8c' },
@@ -4606,12 +4807,12 @@
               { id: 'dm_linen', emoji: '🏖️', name: 'Resort Coral Linen', style: 'background: linear-gradient(180deg, #fb7185 0%, #f43f5e 60%, #e2e8f0 100%); border-radius: 8px;' }
             ],
             hair: [
-              { id: 'dm_h_wolf', emoji: '🧑‍🎤', name: 'Silver Wolfcut', back: 'background: #cbd5e1; border-radius: 18px 18px 10px 10px; height: 58px; width: 58px;', front: 'background: #cbd5e1; border-radius: 20px 10px 4px 8px; height: 26px;' },
-              { id: 'dm_h_gent', emoji: '👨', name: 'Gentleman Undercut', back: 'background: #271a0c; border-radius: 20px 20px 6px 6px; height: 48px; width: 54px;', front: 'background: #271a0c; border-radius: 20px 12px 2px 2px; height: 22px;' },
-              { id: 'dm_h_spiky', emoji: '🧑', name: 'Anime Jet Black', back: 'background: #09090b; border-radius: 16px 16px 8px 8px; height: 55px; width: 58px;', front: 'background: #09090b; border-radius: 16px 16px 3px 3px; height: 25px;' },
-              { id: 'dm_h_curtain', emoji: '👱‍♂️', name: 'Caramel Curtains', back: 'background: #b45309; border-radius: 20px 20px 8px 8px; height: 52px; width: 56px;', front: 'background: #b45309; border-radius: 18px 18px 4px 4px; height: 24px;' },
-              { id: 'dm_h_fade', emoji: '🧔', name: 'Modern Fade', back: 'background: #18181b; border-radius: 20px 20px 4px 4px; height: 45px; width: 52px;', front: 'background: #18181b; border-radius: 18px 18px 2px 2px; height: 18px;' },
-              { id: 'dm_h_cyan', emoji: '🧑‍🎤', name: 'Neon Cyan Punk', back: 'background: #06b6d4; border-radius: 16px 16px 6px 6px; height: 50px; width: 56px;', front: 'background: #06b6d4; border-radius: 18px 10px 3px 3px; height: 24px;' }
+              { id: 'dm_h_wolf', emoji: '🧑‍🎤', name: 'Silver Wolfcut', back: 'background: linear-gradient(180deg, #e2e8f0 0%, #94a3b8 100%); border-radius: 22px 22px 10px 10px; height: 60px; width: 64px; left: -7px; top: -6px;', front: 'background: #e2e8f0; border-radius: 18px 12px 2px 6px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'dm_h_gent', emoji: '👨', name: 'Gentleman Undercut', back: 'background: #271a0c; border-radius: 24px 24px 6px 6px; height: 50px; width: 58px; left: -4px; top: -6px;', front: 'background: #271a0c; border-radius: 18px 10px 2px 2px; height: 11px; top: -3px; left: 1px; right: 1px;' },
+              { id: 'dm_h_spiky', emoji: '🧑', name: 'Anime Jet Black', back: 'background: #09090b; border-radius: 20px 20px 8px 8px; height: 56px; width: 62px; left: -6px; top: -7px;', front: 'background: #09090b; border-radius: 16px 16px 2px 2px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'dm_h_curtain', emoji: '👱‍♂️', name: 'Caramel Curtains', back: 'background: #b45309; border-radius: 24px 24px 8px 8px; height: 54px; width: 60px; left: -5px; top: -6px;', front: 'background: #b45309; border-radius: 16px 16px 3px 3px; height: 11px; top: -3px; left: 1px; right: 1px;' },
+              { id: 'dm_h_fade', emoji: '🧔', name: 'Modern Fade', back: 'background: #18181b; border-radius: 22px 22px 4px 4px; height: 46px; width: 56px; left: -3px; top: -5px;', front: 'background: #18181b; border-radius: 16px 16px 2px 2px; height: 9px; top: -3px; left: 1px; right: 1px;' },
+              { id: 'dm_h_cyan', emoji: '🧑‍🎤', name: 'Neon Cyan Punk', back: 'background: #06b6d4; border-radius: 20px 20px 6px 6px; height: 52px; width: 60px; left: -5px; top: -6px;', front: 'background: #06b6d4; border-radius: 16px 10px 2px 2px; height: 11px; top: -3px; left: 1px; right: 1px;' }
             ],
             shoes: [
               { id: 'dm_s_oxford', emoji: '👞', name: 'Oxford Leather', color: '#1c1917' },
@@ -4632,12 +4833,12 @@
               { id: 'ac_magical', emoji: '🧚', name: 'Magical Girl Robe', style: 'background: linear-gradient(180deg, #a7f3d0 0%, #c084fc 60%, #ec4899 100%); border-radius: 10px 10px 20px 20px;' }
             ],
             hair: [
-              { id: 'ac_h_twins', emoji: '👧', name: 'Twin Pigtails', back: 'background: #a16207; border-radius: 26px 26px 14px 14px; height: 75px; width: 74px;', front: 'background: #a16207; border-radius: 24px 24px 6px 6px; height: 26px;' },
-              { id: 'ac_h_bob', emoji: '👶', name: 'Cute Bob Bangs', back: 'background: #451a03; border-radius: 28px 28px 16px 16px; height: 64px; width: 68px;', front: 'background: #451a03; border-radius: 24px 24px 6px 6px; height: 25px;' },
-              { id: 'ac_h_buns', emoji: '👧', name: 'Double Space Buns', back: 'background: #ff2e8c; border-radius: 24px 24px 10px 10px; height: 60px; width: 76px;', front: 'background: #ff2e8c; border-radius: 24px 24px 4px 4px; height: 24px;' },
-              { id: 'ac_h_curls', emoji: '👱‍♀️', name: 'Princess Curls', back: 'background: #facc15; border-radius: 28px 28px 18px 18px; height: 78px; width: 72px;', front: 'background: #facc15; border-radius: 24px 24px 5px 5px; height: 25px;' },
-              { id: 'ac_h_braids', emoji: '👩‍🦰', name: 'Strawberry Braids', back: 'background: #dc2626; border-radius: 26px 26px 14px 14px; height: 74px; width: 70px;', front: 'background: #dc2626; border-radius: 24px 24px 4px 4px; height: 25px;' },
-              { id: 'ac_h_pony', emoji: '🎀', name: 'Lilac Side Pony', back: 'background: #c084fc; border-radius: 26px 26px 16px 16px; height: 70px; width: 70px;', front: 'background: #c084fc; border-radius: 24px 24px 5px 5px; height: 25px;' }
+              { id: 'ac_h_twins', emoji: '👧', name: 'Twin Pigtails', back: 'background: #a16207; border-radius: 30px 30px 14px 14px; height: 76px; width: 84px; left: -12px; top: -6px;', front: 'background: #a16207; border-radius: 20px 20px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'ac_h_bob', emoji: '👶', name: 'Cute Bob Bangs', back: 'background: #451a03; border-radius: 32px 32px 18px 18px; height: 68px; width: 76px; left: -8px; top: -6px;', front: 'background: #451a03; border-radius: 20px 20px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'ac_h_buns', emoji: '👧', name: 'Double Space Buns', back: 'background: #ff2e8c; border-radius: 28px 28px 10px 10px; height: 65px; width: 88px; left: -14px; top: -8px;', front: 'background: #ff2e8c; border-radius: 20px 20px 4px 4px; height: 11px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'ac_h_curls', emoji: '👱‍♀️', name: 'Princess Curls', back: 'background: #facc15; border-radius: 32px 32px 20px 20px; height: 82px; width: 82px; left: -11px; top: -6px;', front: 'background: #facc15; border-radius: 20px 20px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'ac_h_braids', emoji: '👩‍🦰', name: 'Strawberry Braids', back: 'background: #dc2626; border-radius: 30px 30px 14px 14px; height: 78px; width: 80px; left: -10px; top: -6px;', front: 'background: #dc2626; border-radius: 20px 20px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'ac_h_pony', emoji: '🎀', name: 'Lilac Side Pony', back: 'background: #c084fc; border-radius: 30px 30px 16px 16px; height: 74px; width: 80px; left: -10px; top: -6px;', front: 'background: #c084fc; border-radius: 20px 20px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' }
             ],
             shoes: [
               { id: 'ac_s_mary', emoji: '🥿', name: 'Ribbon Mary Janes', color: '#0f172a', sock: '#ffffff' },
@@ -4658,12 +4859,12 @@
               { id: 'am_skater', emoji: '🛹', name: 'Skater Dungarees', style: 'background: linear-gradient(180deg, #facc15 0%, #2563eb 50%, #1d4ed8 100%); border-radius: 10px;' }
             ],
             hair: [
-              { id: 'am_h_bowl', emoji: '👦', name: 'Fluffy Bowl Cut', back: 'background: #3b220d; border-radius: 28px 28px 10px 10px; height: 56px; width: 66px;', front: 'background: #3b220d; border-radius: 24px 24px 6px 6px; height: 27px;' },
-              { id: 'am_h_spiky', emoji: '🧒', name: 'Spiky Explorer', back: 'background: #1c1917; border-radius: 24px 24px 8px 8px; height: 58px; width: 68px;', front: 'background: #1c1917; border-radius: 22px 22px 5px 5px; height: 26px;' },
-              { id: 'am_h_side', emoji: '👦', name: 'Little Gent Side-part', back: 'background: #b45309; border-radius: 26px 26px 8px 8px; height: 52px; width: 64px;', front: 'background: #b45309; border-radius: 24px 14px 4px 4px; height: 24px;' },
-              { id: 'am_h_cap', emoji: '🧢', name: 'Backwards Cap & Locks', back: 'background: #0284c7; border-radius: 28px 28px 8px 8px; height: 54px; width: 66px;', front: 'background: #0284c7; border-radius: 24px 24px 4px 4px; height: 22px;' },
-              { id: 'am_h_curly', emoji: '🧑', name: 'Curly Cutie', back: 'background: #78350f; border-radius: 28px 28px 12px 12px; height: 58px; width: 68px;', front: 'background: #78350f; border-radius: 24px 24px 6px 6px; height: 26px;' },
-              { id: 'am_h_blonde', emoji: '👱‍♂️', name: 'Sunny Adventurer', back: 'background: #facc15; border-radius: 26px 26px 10px 10px; height: 55px; width: 66px;', front: 'background: #facc15; border-radius: 24px 24px 5px 5px; height: 25px;' }
+              { id: 'am_h_bowl', emoji: '👦', name: 'Fluffy Bowl Cut', back: 'background: #3b220d; border-radius: 32px 32px 12px 12px; height: 60px; width: 74px; left: -7px; top: -6px;', front: 'background: #3b220d; border-radius: 20px 20px 4px 4px; height: 13px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'am_h_spiky', emoji: '🧒', name: 'Spiky Explorer', back: 'background: #1c1917; border-radius: 28px 28px 10px 10px; height: 62px; width: 76px; left: -8px; top: -8px;', front: 'background: #1c1917; border-radius: 18px 18px 3px 3px; height: 13px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'am_h_side', emoji: '👦', name: 'Little Gent Side-part', back: 'background: #b45309; border-radius: 30px 30px 10px 10px; height: 56px; width: 72px; left: -6px; top: -6px;', front: 'background: #b45309; border-radius: 20px 12px 3px 3px; height: 12px; top: -3px; left: 1px; right: 1px;' },
+              { id: 'am_h_cap', emoji: '🧢', name: 'Backwards Cap & Locks', back: 'background: #0284c7; border-radius: 32px 32px 10px 10px; height: 58px; width: 74px; left: -7px; top: -6px;', front: 'background: #0284c7; border-radius: 20px 20px 3px 3px; height: 11px; top: -3px; left: 1px; right: 1px;' },
+              { id: 'am_h_curly', emoji: '🧑', name: 'Curly Cutie', back: 'background: #78350f; border-radius: 32px 32px 14px 14px; height: 64px; width: 76px; left: -8px; top: -6px;', front: 'background: #78350f; border-radius: 20px 20px 4px 4px; height: 13px; top: -4px; left: 1px; right: 1px;' },
+              { id: 'am_h_blonde', emoji: '👱‍♂️', name: 'Sunny Adventurer', back: 'background: #facc15; border-radius: 30px 30px 12px 12px; height: 58px; width: 74px; left: -7px; top: -6px;', front: 'background: #facc15; border-radius: 20px 20px 4px 4px; height: 12px; top: -4px; left: 1px; right: 1px;' }
             ],
             shoes: [
               { id: 'am_s_runners', emoji: '👟', name: 'Sport Runners', color: '#0284c7', sock: '#ffffff' },
@@ -4769,6 +4970,7 @@
       }
 
       renderCategoryItems(cat) {
+        this.setCameraZoom(cat);
         this.itemGrid.innerHTML = '';
         let list = [];
 
@@ -4857,6 +5059,7 @@
       }
 
       triggerRunwayShow() {
+        this.setCameraZoom('skin');
         sound.playWin();
         particles.spawnCannons();
 
@@ -4992,6 +5195,7 @@
     const genModalTitle = document.getElementById('gen-modal-title');
     const genModalDesc = document.getElementById('gen-modal-desc');
     const genModalOkBtn = document.getElementById('btn-gen-modal-ok');
+    const genModalCloseBtn = document.getElementById('btn-close-gen-modal');
     let genModalCallback = null;
 
     function showGenericModal(emoji, title, desc, callback = null) {
@@ -5002,11 +5206,26 @@
       genModal.classList.add('show');
     }
 
-    genModalOkBtn.addEventListener('click', () => {
-      sound.playPop();
-      genModal.classList.remove('show');
-      if (genModalCallback) genModalCallback();
-    });
+    if (genModalOkBtn) {
+      genModalOkBtn.addEventListener('click', () => {
+        sound.playPop();
+        genModal.classList.remove('show');
+        if (genModalCallback) genModalCallback();
+      });
+    }
+
+    if (genModalCloseBtn) {
+      genModalCloseBtn.addEventListener('click', () => {
+        sound.playPop();
+        genModal.classList.remove('show');
+      });
+    }
+
+    if (genModal) {
+      genModal.addEventListener('click', (e) => {
+        if (e.target === genModal) genModal.classList.remove('show');
+      });
+    }
 
     /* Initialize all games and Firebase controllers */
     window.addEventListener('DOMContentLoaded', () => {
@@ -5019,12 +5238,11 @@
       window.dressUpGame = new DressUpController();
       window.purbleGame = new PurblePlaceController();
 
-      // Show Auth Gate Modal before playing if no player session exists
+      // Auto initialize default guest profile if not already set, so all games are immediately clickable!
       if (!window.firebaseArcade.currentUser) {
-        window.authGate.open();
-      } else {
-        window.authGate.updateHeaderProfile();
+        window.firebaseArcade.loginAsGuest('Pemain 1', '🐱');
       }
+      window.authGate.updateHeaderProfile();
     });
   </script>
 </body>
