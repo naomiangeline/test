@@ -14,6 +14,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
 
   <style>
     :root {
@@ -2884,13 +2885,14 @@
 
         if (!config) {
           config = {
-            apiKey: "AIzaSyCuteArcadeDemoPlaceholderKey123",
-            authDomain: "cute-arcade-demo.firebaseapp.com",
-            databaseURL: "https://cute-arcade-demo-default-rtdb.firebaseio.com",
-            projectId: "cute-arcade-demo",
-            storageBucket: "cute-arcade-demo.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456"
+            apiKey: "AIzaSyBWQUqUqvX2i5EmvJGqrpj3R93PWECO63U",
+            authDomain: "gamenaomi-9d158.firebaseapp.com",
+            projectId: "gamenaomi-9d158",
+            storageBucket: "gamenaomi-9d158.firebasestorage.app",
+            messagingSenderId: "276300003583",
+            appId: "1:276300003583:web:069be8a55f232fe75374ca",
+            measurementId: "G-11LX38WTYF",
+            databaseURL: "https://gamenaomi-9d158-default-rtdb.firebaseio.com"
           };
         }
 
@@ -2906,6 +2908,9 @@
             if (firebase.auth) this.auth = firebase.auth();
             if (firebase.firestore) this.db = firebase.firestore();
             if (firebase.database) this.rtdb = firebase.database();
+            if (firebase.analytics && config.measurementId) {
+              try { this.analytics = firebase.analytics(); } catch(e) {}
+            }
 
             if (config.apiKey && !config.apiKey.includes('Placeholder')) {
               this.isLiveFirebase = true;
